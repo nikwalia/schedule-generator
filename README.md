@@ -1,5 +1,4 @@
 # Schedule Generator by OurSQL
-###### Authors: Elena Zheng, Nikash Walia, Samraj Moorjani, Shresta Bangaru
 
 ### Directory guide:
 - `sql-code` contains necessary instructions for MySQL server initialization and connection on Amazon RDS, as well as other SQL scripts

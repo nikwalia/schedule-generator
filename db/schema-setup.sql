@@ -1,5 +1,3 @@
--- author: Nikash Walia
-
 DROP TABLE IF EXISTS student_info.student;
 
 CREATE TABLE student_info.student(
