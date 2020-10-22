@@ -1,5 +1,4 @@
 # Database information and guide
-###### author: Nikash Walia
 
 ## Setting up MySQL Server on AWS
 

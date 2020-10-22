@@ -1,5 +1,4 @@
 # Basic connection to database
-# author: Nikash Walia
 
 from sqlalchemy import create_engine
 
