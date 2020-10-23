@@ -23,7 +23,7 @@
 - Follow the instructions at https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_ConnectToInstance.html for MySQL Workbench.
 
 ### Connecting to RDS through Python code:
-- Refer to `backend-code/README.md` for instructions on this.
+- Refer to `server/README.md` for instructions on this.
 
 ## Files and directories:
 - `schema_setup.sql`- creates all tables for the database
