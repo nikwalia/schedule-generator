@@ -14,6 +14,11 @@ sudo chkconfig httpd on
 # install Anaconda in silent mode
 wget https://repo.anaconda.com/archive/Anaconda3-2020.07-Linux-x86_64.sh -O ~/anaconda.sh
 sh ~/anaconda.sh -b -p $HOME/anaconda
+rm anaconda.sh
+EXPORT PATH=$PATH:$HOME/anaconda/bin
+
+conda install numpy pandas sqlalchemy -y
+pip install neo4j
 
 # set up Neo4J through Docker
 sudo amazon-linux-extras install docker

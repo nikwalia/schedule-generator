@@ -32,7 +32,7 @@
 
 ### Database initialization
 Since hosting a Neo4J RDS instance on AWS is paid, we will instead use a Docker container on our EC2 instance. This setup is already handled
-for the prerequisites database through use of the `setup.sh` script- make sure you run this first!
+for the prerequisites database through use of the `server/setup.sh` script- make sure you run this first!
 
 ### Connecting to Neo4J using Neo4J Desktopp:
 - Download Neo4J Desktop.
