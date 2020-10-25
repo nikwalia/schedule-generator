@@ -4,8 +4,11 @@
 The `conda` Python package manager has been used to install all software maintained on the Anaconda cloud. Pip is used for the rest. An `environment.yml` will soon be available.
 
 After installing Anaconda, all dependencies can be installed with the following commands:
+
 `conda install numpy pandas sqlalchemy -y`
+
 `pip install neo4j`
+
 Note the above is handled through the server setup script.
 
 ## Flask setup:
