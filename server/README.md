@@ -5,7 +5,7 @@ The `conda` Python package manager has been used to install all software maintai
 
 After installing Anaconda, all dependencies can be installed with the following commands:
 
-`conda install numpy pandas sqlalchemy -y`
+`conda install numpy pandas sqlalchemy flask python-dotenv -y`
 
 `pip install neo4j`
 
