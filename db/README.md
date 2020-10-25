@@ -32,23 +32,18 @@
 
 ### Database initialization
 Since hosting a Neo4J RDS instance on AWS is paid, we will instead use a Docker container on our EC2 instance. This setup is already handled
-for the prerequisites database through use of the `setup.sh` script- make sure you run this first! Since we are using the community edition of Neo4J,
-multiple graph databases are not allowed for a single instance- so we will simply work around this by spinning up multiple Docker instances
-and querying them individually.
+for the prerequisites database through use of the `setup.sh` script- make sure you run this first!
 
 ### Connecting to Neo4J using Neo4J Desktopp:
 - Download Neo4J Desktop.
 - Create a new project that will contain all of the graph database connections.
 - Select "Add a new database" and choose "Connect to Remore DBMS".
-- Set the name of the database. Make sure these are distinct and descriptive, as the graph within each database will be `neo4j-default` and cannot
-be renamed.
-- Replace `localhost` with the IP address of the instance. Make sure to change the port to match the exposed Bolt port for the DB instance. The
-corresponding port for the prerequisites DB is 7687- the default option.
+- Set the name of the database.
+- Replace `localhost` with the IP address of the instance.
 - Enter "neo4j" as the username and "test" as the password, then connect and open.
 - You should see a screen similar to this:
 ![Neo4j Setup](neo4j-connection.png)
 
-### Spinning up a new Docker-Neo4J instance
-- SSH into the EC2 instance. Check out the instructions at `server/README.md`.
-- Run `docker ps` to find all the running instances of Docker images.
-- There, you will see all the different ports that have been occcupied. For example, the default port connection 
+## Running Cypher commands on AWS
+- SSH into the EC2 instance. See `server/README.md` for details.
+- Queries and commands can be executed with the format `cypher-shell -u neo4j -p test "YOUR QUERY HERE"`.
