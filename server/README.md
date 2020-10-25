@@ -1,10 +1,12 @@
 # Backend information and guide
 
 ## Python dependencies:
-The `conda` Python package manager has been used to install all software. An `environment.yml` will soon be available.
+The `conda` Python package manager has been used to install all software maintained on the Anaconda cloud. Pip is used for the rest. An `environment.yml` will soon be available.
 
-After installing Anaconda, all dependencies can be installed with the following command:
-`conda install numpy pandas sqlalchemy`
+After installing Anaconda, all dependencies can be installed with the following commands:
+`conda install numpy pandas sqlalchemy -y`
+`pip install neo4j`
+Note the above is handled through the server setup script.
 
 ## Flask setup:
 __TODO__: instructions for Flask app installation
@@ -12,7 +14,7 @@ __TODO__: instructions for Flask app installation
 ## Server initialization on Amazon EC2 Console:
 - Follow the instructions for creating an RDS instance in `db/README.md`
 - Go to the EC2 page and select "Launch Instance"
-- Choose Amazon Linux Image as the Amazon Machine Image (AMI)
+- Choose Amazon Linux Image as the Amazon Machine Image 2 (AMI)
 - Select t2.micro (free tier eligible) as the instance type
 - Skip to Step 6: Configure Security Group. Choose "select an existing security group" and choose the one corresponding to the RDS console.
 - Review and then click "Launch". Make sure to save the .pem file for enabling access.
