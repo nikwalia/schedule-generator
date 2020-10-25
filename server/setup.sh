@@ -17,7 +17,7 @@ sh ~/anaconda.sh -b -p $HOME/anaconda
 rm anaconda.sh
 EXPORT PATH=$PATH:$HOME/anaconda/bin
 
-conda install numpy pandas sqlalchemy -y
+conda install numpy pandas sqlalchemy flask python-dotenv -y
 pip install neo4j
 
 # set up Neo4J through Docker
