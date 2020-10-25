@@ -12,7 +12,12 @@ After installing Anaconda, all dependencies can be installed with the following 
 Note the above is handled through the server setup script.
 
 ## Flask setup:
-__TODO__: instructions for Flask app installation
+ - Create directory (e.g. "api") containing your Flask application.
+    - Configure your API with all necessary endpoints.
+ - Create ".flaskenv" file with corresponding environment variables.
+    - The two lines you should insert are `FLASK_APP=<file_name>.py` and `FLASK_ENV=development`.
+ - You can run your Flask application by navigating into your directory and running `flask run`.
+ - You should be able to open up your application on your browser (default "127.0.0.1:5000").
 
 ## Server initialization on Amazon EC2 Console:
 - Follow the instructions for creating an RDS instance in `db/README.md`
