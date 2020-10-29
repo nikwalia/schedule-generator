@@ -17,13 +17,15 @@ def addEnrollment(netid, courseid, sem, rating):
 	connection.execute(s)
 
 if __name__ == '__main__':
-    engine = create_engine('mysql+pymysql://***REMOVED***')
+	with open("../server_info", "r") as f:
+		url = f.readline()
+	engine = create_engine('mysql+py' + url)
 
-    with engine.connect() as connection:
+	with engine.connect() as connection:
     	#addStudent("taylorswift", "blahblahbalhahahhaha", 13, 13)
     	#addTrack("CS-Minor", "Business", 200, "bangaru2")
     	#addCourse("CS411", 3, "Big Data")
     	#addEnrollment("bangaru2", "CS233", "FA20", 1)
-    	result = connection.execute('SELECT * FROM student_info.enrollments')
-    	for row in result:
-    		print(row)
+		result = connection.execute('SELECT * FROM student_info.enrollments')
+		for row in result:
+			print(row)
