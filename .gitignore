@@ -130,3 +130,10 @@ dmypy.json
 
 # IDE
 .vscode/
+
+# Data
+data/
+*.csv
+
+# RSA Key
+*.pem
