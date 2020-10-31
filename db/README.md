@@ -19,6 +19,11 @@
 - Click on "Add rule" and set the rules to be as below:
 ![Access setup](inbound-rule-setup.png)
 
+
+### Enabling functions, triggers, and procedures
+- RDS does not allow function, trigger, and procedure creation by default.
+- Follow the steps at https://aws.amazon.com/premiumsupport/knowledge-center/rds-mysql-functions/ to enable creation and usage of these.
+
 ### Connecting to RDS through MySQL Workbench:
 - Follow the instructions at https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_ConnectToInstance.html for MySQL Workbench.
 
@@ -27,6 +32,8 @@
 
 ## Files and directories:
 - `schema_setup.sql`- creates all tables for the database. Should be executed before everything else.
+- `convert_semester.sql`- contains a function for auto-converting a text semester to a numerical representation.
+- `semester_offset_trigger.sql`- creates a trigger for auto-calculating the semester offset whenever a new enrollment is stored.
 
 ## Setting up Neo4J Server on AWS
 

@@ -36,6 +36,7 @@ CREATE TABLE student_info.enrollments(
     course_id VARCHAR(10) NOT NULL REFERENCES student_info.courses(course_id), -- ex. CS126, CS498-DL
     semester VARCHAR(10) NOT NULL, -- ex. FA20. Any credits before college are labeled as "BEFORE".
     -- to guarantee semester validity, make a drop-down in the front-end
+    semester_taken INT NOT NULL DEFAULT 0,
     rating INT NOT NULL CHECK (rating >= 0 AND rating <= 10), -- fixed range
     PRIMARY KEY(net_id, course_id)
 );
