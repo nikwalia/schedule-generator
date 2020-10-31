@@ -21,7 +21,7 @@ def upload_courses(file_path: str, engine: MySQLEngine):
             raise ValueError('Must provide legal filepath')
         
         new = pd.read_csv(str(csv_filepath))
-        diff = new.iloc[~new['courseId'].isin(df['courseId'])][['courseId', 'creditHours']]
+        diff = new.loc[~new['courseId'].isin(df['courseId'])][['courseId', 'creditHours']]
         df = pd.concat([df, diff], axis=0)
 
     # function for storing credit-hours. If there are multiple possible values, take the average
