@@ -40,3 +40,6 @@ Strings should be configured as `mysql://user_name:password@endpoint`. Refer to 
 
 ## Files and directories:
 - `demo_connect_db.py`- a demo script for connecting to RDS.
+- `demo_connect_neo4j.py`- a demo script for connecting to Neo4J's remote DBMS.
+- `utils`:
+   - `course_explorer_parser.py`- scrapes UIUC's courses in XML form and returns CSV files.

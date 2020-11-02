@@ -45,5 +45,5 @@ def upload_courses(file_path: str, engine: MySQLEngine):
 if __name__ == '__main__':
     with open("../server_info", "r") as f:
         e = MySQLEngine(url = f.readline())
-        upload_courses('C:/Users/nikas/Documents/GitHub/schedule-generator/data', e)
+        upload_courses('../data', e)
         del e

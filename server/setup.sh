@@ -25,6 +25,9 @@ sudo amazon-linux-extras install docker
 sudo service docker start
 sudo usermod -a -G docker ec2-user
 
+# download apoc library necessary for data structure predicates
+cd $HOME/neo4j/plugins && wget https://github.com/neo4j-contrib/neo4j-apoc-procedures/releases/download/4.1.0.0/apoc-4.1.0.0-core.jar 
+
 sudo docker run \
     -p7474:7474 -p7687:7687 \
     -d \

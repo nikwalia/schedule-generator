@@ -21,7 +21,7 @@ def getxml(url):
     return data
 
 
-def parse_course_info(years, semesters):
+def parse_course_info(years, semesters, majors):
     """
     Retrives XML from course explorer for a given list of years and semesters.
     Writes the data to an individual csv file.
@@ -29,9 +29,9 @@ def parse_course_info(years, semesters):
     :param years: years to iterate over
     :param semesters: semesters to iterate over
     """
-    for year, sem in list(itertools.product(years, semesters)):
+    for year, sem, major in list(itertools.product(years, semesters, majors)):
 
-        url = 'https://courses.illinois.edu/cisapp/explorer/schedule/{}/{}/CS.xml'.format(year,sem)
+        url = 'https://courses.illinois.edu/cisapp/explorer/schedule/{}/{}/{}.xml'.format(year,sem, major)
         xml_doc = getxml(url)
         courses = []
 
@@ -55,7 +55,7 @@ def parse_course_info(years, semesters):
         
         
         keys = courses[0].keys()
-        with open('{}-{}.csv'.format(year, sem), 'w', newline='')  as output_file:
+        with open('{}-{}-{}.csv'.format(year, sem, major), 'w', newline='')  as output_file:
             dict_writer = csv.DictWriter(output_file, keys)
             dict_writer.writeheader()
             dict_writer.writerows(courses)
@@ -63,4 +63,5 @@ def parse_course_info(years, semesters):
 if __name__ == "__main__":
     years = ['2016','2017','2018','2019','2020']
     semesters = ['fall','spring']
-    parse_course_info(years, semesters)
+    majors = ['CHEM']
+    parse_course_info(years, semesters, majors)
