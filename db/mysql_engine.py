@@ -20,19 +20,50 @@ class MySQLEngine:
     def __del__(self):
         """
         Destructor. Closes connection, then deletes members.
-        
         """
         self.__connection.close()
         del self.__connection
         del self.__engine
         del self.__url
 
+
+    def open(self):
+        """
+        Opens a connection if it was manually closed.
+        """
+        if self.__engine is None:
+            self.__engine = create_engine(self.__url)
+        if self.__connection is None:
+            self.__connection = self.__engine.connect()
+
+
+    def close(self):
+        """
+        Manually closes a connection. Should be used only in debug when engine is not automatically deleted.
+        """
+        if self.__connection is not None:
+            self.__connection.close()
+            self.__connection = None
+        if self.__engine is not None:
+            self.__engine = None
+
+
+    def is_open(self):
+        """
+        Checks if the connection is already open
+        """
+        return self.__connection is not None and self.__engine is not None
+
     
     def __get_headers(self, table_name: str):
+        if self.__engine is None or self.__connection is None:
+            raise AttributeError("Engine or connection are not initialized")
         return [row[0] for row in self.__connection.execute('SHOW COLUMNS FROM student_info.%s' % table_name)]
 
     
     def __get_header_types(self, table_name: str):
+        if self.__engine is None or self.__connection is None:
+            raise AttributeError("Engine or connection are not initialized")
         return [row[1] for row in self.__connection.execute('SHOW COLUMNS FROM student_info.%s' % table_name)]
     
 
@@ -45,7 +76,8 @@ class MySQLEngine:
         
         :return: Pandas DataFrame containing query results
         """
-        
+        if self.__engine is None or self.__connection is None:
+            raise AttributeError("Engine or connection are not initialized")
         if 'SELECT' not in query:
             raise ValueError('Retrieving data only')
         _res = self.__connection.execute(query)
@@ -66,6 +98,8 @@ class MySQLEngine:
         
         :return: Pandas DataFrame if return_val == True
         """
+        if self.__engine is None or self.__connection is None:
+            raise AttributeError("Engine or connection are not initialized")
         if return_val:
             res = self.__connection.execute(query)
             out = []
@@ -85,6 +119,8 @@ class MySQLEngine:
         :param data: pandas DataFrame containing data to insert
         :param table_name: which table to insert to
         """
+        if self.__engine is None or self.__connection is None:
+            raise AttributeError("Engine or connection are not initialized")
         _table_headers = self.__get_header_types(table_name)
         for df_header, table_header in zip(data.dtypes, _table_headers):
             if df_header in ('float64', 'float') and table_header != 'float':
@@ -121,6 +157,8 @@ class MySQLEngine:
         :param data: tuple containing data to insert
         :param table_name: which table to insert to
         """
+        if self.__engine is None or self.__connection is None:
+            raise AttributeError("Engine or connection are not initialized")
         _table_headers = self.__get_header_types(table_name)
         tuple_types = tuple([type(val) for val in data])
         for tuple_dtype, table_header in zip(tuple_types, _table_headers):
@@ -151,4 +189,4 @@ class MySQLEngine:
 if __name__ == '__main__':
     with open("../server_info", "r") as f:
         e = MySQLEngine(url = f.readline())
-    print(e.wrapped_query('SELECT * FROM student_info.courses', 'courses'))
+        print(e.wrapped_query('SELECT * FROM student_info.courses', 'courses'))

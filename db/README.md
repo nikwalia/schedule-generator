@@ -32,8 +32,14 @@
 
 ## Files and directories:
 - `schema_setup.sql`- creates all tables for the database. Should be executed before everything else.
+- `class_frequency_view.sql`- finds the rating for every class per semester.
+- `top_class_frequency_procedure.sql`- finds the semester when a class is most often taken.
 - `convert_semester.sql`- contains a function for auto-converting a text semester to a numerical representation.
 - `semester_offset_trigger.sql`- creates a trigger for auto-calculating the semester offset whenever a new enrollment is stored.
+- `mysql_engine.py`- a wrapper engine for interacting with a MySQL RDS instance.
+- `neo4j_engine.py`- a wrapper engine for interacting with a Neo4J remote DBMS.
+- `initialize_courses.py`- uploads all courses to the MySQL RDS instance.
+- `initialize_prereqs.py`- parses thru downloaded CSVs and uploads relationships to the Neo4J database.
 
 ## Setting up Neo4J Server on AWS
 
