@@ -2,10 +2,12 @@ DROP TABLE IF EXISTS student_info.student;
 
 CREATE TABLE student_info.student(
 	net_id VARCHAR(8) PRIMARY KEY NOT NULL UNIQUE, -- ex: nikashw2
+    student_name VARCHAR(40) NOT NULL, -- ex: Nikash Walia
     pass_word VARCHAR(30), -- you don't get to know
     start_semester VARCHAR(10) NOT NULL, -- ex: FA19
     current_semester VARCHAR(10) NOT NULL, -- ex: FA20
-    total_semesters INT NOT NULL, -- 8
+    expected_graduation VARCHAR(10) NOT NULL, -- ex: FA22
+    total_semesters INT NOT NULL DEFAULT 0, -- 8
     CHECK (pass_word = NULL OR (LENGTH(pass_word) > 10)) -- requires password of length greater than 10 and less than 30
 );
 
