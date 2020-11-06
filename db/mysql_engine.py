@@ -1,6 +1,6 @@
 import pandas as pd
+import glob, os
 from sqlalchemy import create_engine
-
 
 class MySQLEngine:
     def __init__(self, **kwargs):
@@ -184,6 +184,21 @@ class MySQLEngine:
 
         _command += (insert_tuple % data)
         self.__connection.execute(_command)
+
+def loadEngine():
+    """
+    Creates an SQL engine instance.
+    """
+    url = ''
+    server_info_path = ''
+    if 'api' in os.getcwd():
+        server_info_path += '../'
+    if 'server' in os.getcwd():
+        server_info_path += '../'
+    with open(server_info_path + "server_info", "r") as f:
+       url = f.readline()
+    e = MySQLEngine(url = 'mysql+py' + url)
+    return e
 
 
 if __name__ == '__main__':
