@@ -55,6 +55,8 @@ def parse_course_info(years, semesters, majors):
         
         
         keys = courses[0].keys()
+        # this ensures proper ordering- converting to starting numerical month
+        sem = '8' if sem == 'fall' else '1'
         with open('{}-{}-{}.csv'.format(year, sem, major), 'w', newline='')  as output_file:
             dict_writer = csv.DictWriter(output_file, keys)
             dict_writer.writeheader()

@@ -18,7 +18,7 @@ CREATE TABLE student_info.track(
     interest VARCHAR(30) NOT NULL, -- ex. HPC, Big Data
     -- interest helps us filter out classes post-network stage
     credit_hours INT NOT NULL, -- the number of credit hours a student allocates to that track
-    net_id VARCHAR(8) UNIQUE REFERENCES student_info.student(net_id) -- ex. nikashw2
+    net_id VARCHAR(8) REFERENCES student_info.student(net_id) -- ex. nikashw2
     ON DELETE CASCADE
     ON UPDATE CASCADE,
     PRIMARY KEY(net_id, field_name, interest)
@@ -29,7 +29,8 @@ DROP TABLE IF EXISTS student_info.courses;
 CREATE TABLE student_info.courses(
 	course_id VARCHAR(10) PRIMARY KEY NOT NULL UNIQUE, -- ex. CS126, CS498-DL
     credits INT NOT NULL, -- ex. 3 or 4 (for CS411)
-    interest VARCHAR(30) NOT NULL -- ex: HPC, Big Data (analogous to "stream")
+    interest VARCHAR(30) NOT NULL, -- ex: HPC, Big Data (analogous to "stream"),
+    gpa FLOAT NOT NULL -- ex: 3.33
 );
 
 DROP TABLE IF EXISTS student_info.enrollments;

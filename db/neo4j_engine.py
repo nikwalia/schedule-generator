@@ -1,4 +1,5 @@
 from neo4j import GraphDatabase
+import json
 
 
 class Neo4JEngine:
@@ -88,7 +89,7 @@ class Neo4JEngine:
 
         if 'MATCH' not in query.upper() or any(['MERGE', 'SET'] in query.upper()):
             raise ValueError('Command can only be a query')
-        response = list(self.__session.run(query))
+        response = [json.loads(s) for s in self.__session.run(query)]
         return response
 
 
@@ -117,12 +118,12 @@ class Neo4JEngine:
             raise AttributeError("Driver or session are not initialized")
         prereqs = prereqs + ['NOPREREQS']
         class_command = "MATCH (o: OR)<-[:PREREQ]-(p: Class)\n" \
-                + "WHERE p.courseId IN " + str(prereqs) + "\n" \
-                + "WITH COLLECT(DISTINCT o) AS or_list\n" \
-                + "MATCH (c: Class)<-[:HAS]-(a: AND)<-[:HAS]-(o2: OR)\n" \
-                + "WITH or_list, c, a, COLLECT(DISTINCT o2) AS o2_list\n" \
-                + "WHERE apoc.coll.containsAll(or_list, o2_list)\n" \
-                + "RETURN c.courseId"
+                "WHERE p.courseId IN " + str(prereqs) + "\n" \
+                "WITH COLLECT(DISTINCT o) AS or_list\n" \
+                "MATCH (c: Class)<-[:HAS]-(a: AND)<-[:HAS]-(o2: OR)\n" \
+                "WITH or_list, c, a, COLLECT(DISTINCT o2) AS o2_list\n" \
+                "WHERE apoc.coll.containsAll(or_list, o2_list)\n" \
+                "RETURN c.courseId"
         matched_classes = self.__session.run(class_command)
         matched_classes = [record[0] for record in matched_classes]
         return list(set(matched_classes) - set(prereqs))
@@ -141,6 +142,27 @@ class Neo4JEngine:
             raise ValueError("class_name cannot be None")
         description_command = "MATCH (c: Class)\n" \
                                 "WHERE c.courseId = '%s'\n" \
-                                "RETURN c.description" % class_name
+                                "RETURN c.description, c.creditHours, c.GPA" % class_name
         desc = self.__session.run(description_command)[0]
         return desc
+
+
+    def get_subsequent_classes(self, class_name: str):
+        """
+        Gets all the classes that lead away from a certain class in terms of prereqs.
+
+        :param class_name: the class whose follow-ups to retrieve
+        :return: a list representing the names of the follow-up classes
+        """
+        if self.__driver is None or self.__session is None:
+            raise AttributeError("Driver or session are not initialized")
+        elif class_name is None:
+            raise ValueError("class_name cannot be None")
+
+        subsequent_command = "MATCH (c: Class)<-[:HAS]-(:AND)<-[:HAS]-(:OR)<-[:PREREQ]-(p: Class)\n" \
+                            "WHERE p.courseId = '%s'\n" \
+                            "RETURN c.courseId" % class_name
+
+        classes = list(self.__session.run(subsequent_command))
+
+        return classes

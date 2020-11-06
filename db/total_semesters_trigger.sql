@@ -3,7 +3,7 @@ DROP TRIGGER IF EXISTS calculate_end_semester;
 DELIMITER //
 
 CREATE TRIGGER calculate_end_semester
-	BEFORE INSERT ON student_info.students
+	BEFORE INSERT ON student_info.student
     FOR EACH ROW
     BEGIN
 		SET @start_semester_num = convert_semester(NEW.start_semester);

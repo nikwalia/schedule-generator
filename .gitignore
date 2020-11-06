@@ -137,3 +137,5 @@ data/
 
 # RSA Key
 *.pem
+
+server_info
