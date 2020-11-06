@@ -1,6 +1,6 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "Schedule Generator",
+  "name": "Schedule Generator Application",
   "icons": [
     {
       "src": "favicon.ico",
