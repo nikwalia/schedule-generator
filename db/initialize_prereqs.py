@@ -3,13 +3,15 @@ from os import path
 import pandas as pd
 import numpy as np
 import pathlib
+from utils import parse_data, extract_gpa_data, merge_gpa_data
+from tqdm import tqdm
 
 
 # not official courses, but need to be taken into account
 special_prereqs = ['THREE YEARS OF HIGH SCHOOL MATHEMATICS', 'ONE YEAR OF HIGH SCHOOL CHEMISTRY']
 
 # used to insert a class node
-insert_command = 'CREATE (c: Class {courseId: "%s", courseTitle: "%s", creditHours: %d, description: "%s"})'
+insert_command = 'CREATE (c: Class {courseId: "%s", courseTitle: "%s", creditHours: %d, description: "%s", GPA: %f})'
 
 # used to create the OR and AND nodes, as well as the relevant relationships
 and_insert_command = 'MATCH (c: Class {courseId: "%s"}) CREATE (c)<-[r: HAS]-(a: AND {courseId: "%s"})'
@@ -71,7 +73,10 @@ def clean_entries(data):
     :param data: a Pandas dataframe
     :return: a cleaned pandas dataframe.
     """
+    print('\nValidating entries...')
     valid_rows = np.array([True] * len(data))
+    pbar = tqdm(total=len(data))
+
     i = 0
     for _, row in data.iterrows():
         prereqs = row['calculated_prereqs']
@@ -91,12 +96,17 @@ def clean_entries(data):
             
             if len(prereqs[or_req]) == 0:
                 valid_rows[i] = False
+                pbar.update(1)
                 break
         i += 1
+        pbar.update(1)
+
     out_data = data.loc[valid_rows]
     def remove_quotes(desc):
         return desc.replace('"', '').replace("'", '')
     out_data['description'] = out_data['description'].apply(remove_quotes)
+
+    print('\nFinished cleaning entries')
     return out_data
 
 
@@ -107,30 +117,7 @@ def insert_to_database(file_path: str, engine: Neo4JEngine):
     :param file_path: directory containing CSVs scraped from UIUC's courses site.
     :param engine: a Neo4J engine used to insert data
     """
-    df = pd.DataFrame(columns=['courseId', 'courseTitle', 'creditHours', 'description', 'prereqs'])
-    if file_path is None:
-        raise ValueError('Must provide not-None filepath')
-    for csv_filepath in sorted(pathlib.Path(file_path).glob('*.csv'), reverse=True):
-        if csv_filepath is None:
-            raise ValueError('Must provide legal filepath')
-        
-        if 'gpa_data.csv' in csv_filepath:
-            continue
-        new = pd.read_csv(str(csv_filepath))
-        diff = new.loc[~new['courseId'].isin(df['courseId'])]
-        df = pd.concat([df, diff], axis=0)
-        
-    # function for storing credit-hours. If there are multiple possible values, take the average
-    def extract_hours(hrs_str):
-        t = hrs_str.split()
-        if 'TO' in t:
-            return (int(t[0]) + int(t[2])) // 2
-        elif 'OR' in t:
-            return (int(t[0])) + int(t[2]) // 2
-        else:
-            return int(t[0])
-
-    df['creditHours'] = df['creditHours'].apply(extract_hours)
+    df = parse_data(file_path)
 
     # replaces NaNs with empty strings for classes w/o prereqs
     df['prereqs'].loc[[type(val) == float for val in df['prereqs']]] = ''
@@ -141,23 +128,37 @@ def insert_to_database(file_path: str, engine: Neo4JEngine):
     df = df.loc[~((df['calculated_prereqs'] == {'req1': []}) & (df['prereqs'].str.contains('Same as')))]
 
     df = clean_entries(df)
+    
+    gpa_df = extract_gpa_data(file_path)
+    df = merge_gpa_data(df, gpa_df)
 
+    print('\nInserting class nodes to Neo4J...')
+    pbar = tqdm(total=len(df))
     # inserts all the class nodes
     for row in df.to_numpy():
-        exec_command = insert_command % tuple(row[:-2])
+        # print(tuple(row[:-3]))
+        to_insert = tuple(list(row[:-3]) + [row[-1]])
+        exec_command = insert_command % to_insert
         try:
-            engine.raw_operation(exec_command)
+            engine.insert_node(exec_command)
         except Exception as e:
             print(exec_command)
             print('\n\n')
             print(e)
             break
+        pbar.update(1)
 
+    print('\nInserting special nodes to Neo4J...')
+    pbar = tqdm(total=len(special_prereqs) + 1)
     # create special nodes
-    engine.raw_operation('CREATE (c: Class {courseId: "NOPREREQS"})')
+    engine.insert_node('CREATE (c: Class {courseId: "NOPREREQS"})')
+    pbar.update(1)
     for val in special_prereqs:
-        engine.raw_operation('CREATE (c: Class {courseId: "%s"})' % val)
+        engine.insert_node('CREATE (c: Class {courseId: "%s"})' % val)
+        pbar.update(1)
 
+    print('\nInserting relationship nodes to Neo4J...')
+    pbar = tqdm(total=len(df))
     # insert all relationship nodes
     for _, row in df.iterrows():
         calculated_prereqs = row['calculated_prereqs']
@@ -178,34 +179,17 @@ def insert_to_database(file_path: str, engine: Neo4JEngine):
                     prereq_exec_command = prereq_rel_command % (row['courseId'], i, prereq)
                     engine.raw_operation(prereq_exec_command)
 
-
-def insert_gpa_data(file_path: str, engine: Neo4JEngine):
-    df = pd.read_csv(file_path)
-    df = df[['YearTerm', 'Subject', 'Number', 'A+', 'A', 'A-', 'B+', 'B', 'B-', 'C+', 'C', 'C-', 'D+', 'D', 'D', 'F']]
-    df['Students'] = np.sum(df.to_numpy()[:, 3:], axis=1)
-    df['scores'] = np.sum(df.to_numpy()[:, 3:-1] * [4., 4., 3.67, 3.33, 3, 2.67, 2.33, 2, 1.67, 1.33, 1., 0.67, 0], axis=1)
-    df['courseId'] = df['Subject'] + " " + df['Number'].astype(str)
-    df = df.drop(labels=['Subject', 'Number'], axis=1)
-    rows = []
-
-    for i, courseId in enumerate(set(df['courseId'])):
-        summed_row = np.sum(df[['Students', 'scores']].loc[df['courseId'] == courseId], axis=0)
-        rows.append(list(summed_row) + [courseId])
-
-    out_df = pd.DataFrame(rows, columns=['Students', 'scores', 'courseId'])
+        pbar.update(1)
     
-    gpa_exec_command = 'MATCH (c: Class {courseId: "%s"})  SET c.GPA = %f'
-    for i, row in out_df.iterrows():
-        exec_command = gpa_exec_command % (row['courseId'], row['GPA'])
-        e.raw_operation(exec_command)
+    print('\nFinished uploading nodes and relationships to Neo4J')
 
 
 if __name__ == '__main__':
+    f = open('../server_info')
+    f.readline()
+    uri, username, password = f.readline().split(',')
+    f.close()
     file_path = '../data'
-    uri = "bolt://%s:7687" % input()
-    username = input()
-    password = input()
     e = Neo4JEngine(uri, username, password)
     insert_to_database(file_path, e)
-    insert_to_database(file_path + 'gpa-data.csv', e)
     del e
