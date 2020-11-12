@@ -196,7 +196,7 @@ def loadEngine():
     if 'server' in os.getcwd():
         server_info_path += '../'
     with open(server_info_path + "server_info", "r") as f:
-       url = f.readline()
+       url = f.readline().strip()
     e = MySQLEngine(url = 'mysql+py' + url)
     return e
 

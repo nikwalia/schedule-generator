@@ -187,7 +187,7 @@ def insert_to_database(file_path: str, engine: Neo4JEngine):
 if __name__ == '__main__':
     f = open('../server_info')
     f.readline()
-    uri, username, password = f.readline().split(',')
+    uri, username, password = f.readline().strip().split(',')
     f.close()
     file_path = '../data'
     e = Neo4JEngine(uri, username, password)
