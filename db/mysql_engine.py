@@ -127,7 +127,7 @@ class MySQLEngine:
                 raise TypeError('Incompatible data types: %s and %s' % (df_header, table_header))
             elif df_header in ('int64', 'int') and table_header != 'int':
                 raise TypeError('Incompatible data types: %s and %s' % (df_header, table_header))
-            elif df_header == 'object' and 'varchar' not in table_header:
+            elif df_header == 'object' and 'varchar' not in table_header and table_header != 'json':
                 raise TypeError('Incompatible data types: %s and %s' % (df_header, table_header))
         
         _name = 'student_info.%s' % table_name
@@ -136,7 +136,7 @@ class MySQLEngine:
         insert_tuple = []
         for dt in data.dtypes:
             if dt == 'object':
-                insert_tuple.append('"%s"') # strings are the only objects allowed
+                insert_tuple.append("'%s'") # strings are the only objects allowed
             elif dt == 'float64' or dt == 'float':
                 insert_tuple.append('%f')
             elif dt == 'int64' or dt == 'int':
@@ -166,7 +166,7 @@ class MySQLEngine:
                 raise TypeError('Incompatible data types: %s and %s' % (tuple_dtype, table_header))
             elif tuple_dtype in ('int64', 'int') and table_header != 'int':
                 raise TypeError('Incompatible data types: %s and %s' % (tuple_dtype, table_header))
-            elif tuple_dtype == 'object' and 'varchar' not in table_header:
+            elif tuple_dtype == 'object' and 'varchar' not in table_header and table_header != 'json':
                 raise TypeError('Incompatible data types: %s and %s' % (tuple_dtype, table_header))
 
         _name = 'student_info.%s' % table_name
@@ -175,7 +175,7 @@ class MySQLEngine:
         insert_tuple = []
         for dt in data.dtypes:
             if dt == 'object':
-                insert_tuple.append('"%s"') # strings are the only objects allowed
+                insert_tuple.append("'%s'") # strings are the only objects allowed
             elif dt == 'float64' or dt == 'float':
                 insert_tuple.append('%f')
             elif dt == 'int64' or dt == 'int':

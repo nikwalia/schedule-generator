@@ -33,8 +33,9 @@
 ## Files and directories:
 - `SQL`:
     - `schema_setup.sql`- creates all tables for the database. Should be executed before everything else.
-    - `class_frequency_view.sql`- finds the rating for every class per semester.
+    - `class_rating_view.sql`- finds the average rating for every class.
     - `top_class_frequency_procedure.sql`- finds the semester when a class is most often taken.
+    - `score_schedule_procedure.sql`- finds the best schedule to take based on historical trends and past user data.
     - `convert_semester.sql`- contains a function for auto-converting a text semester to a numerical representation.
     - `semester_offset_trigger.sql`- creates a trigger for auto-calculating the semester offset whenever a new enrollment is stored.
     - `update_enrollment_semester_trigger.sql`- creates a trigger for recalculating the semester offset whenever an enrollment is updated.
