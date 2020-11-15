@@ -1,5 +1,5 @@
 from utils import parse_data, extract_gpa_data, merge_gpa_data
-from mysql_engine import MySQLEngine
+from mysql_engine import loadEngine, MySQLEngine
 import pathlib
 import numpy as np
 
@@ -16,7 +16,7 @@ def upload_courses(file_path: str, engine: MySQLEngine):
     df = df[['courseId', 'creditHours']]
 
     # default value of Interest- will need to be hardcoded.
-    df['Interest'] = ['None'] * len(df)
+    df['Interest'] = ['["None"]'] * len(df)
 
     gpa_df = extract_gpa_data(file_path)
     df = merge_gpa_data(df, gpa_df)
@@ -25,7 +25,6 @@ def upload_courses(file_path: str, engine: MySQLEngine):
 
 
 if __name__ == '__main__':
-    with open("../server_info", "r") as f:
-        e = MySQLEngine(url = f.readline())
-        upload_courses('../data', e)
-        del e
+    e = loadEngine()
+    upload_courses('data', e)
+    del e

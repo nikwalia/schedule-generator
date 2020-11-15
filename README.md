@@ -11,3 +11,15 @@
 - Python3 (conda distribution preferred):
     - `conda install numpy pandas pathlib tqdm neo4j sqlalchemy flask flask-cors -y`
     - `pip install neo4j python-dotenv`
+
+### Advanced Function 1
+The advanced function is used to generate an optimal schedule. Scores are calculated based off of this formula:
+
+![Equation for AF1](https://latex.codecogs.com/svg.latex?\Large&space;score=\\frac{(AVG\\_GPA+AVG\\_User\\_Rating+AVG\\_NN\\_Score)\\cdot\\;num\\_interest\\_courses}{|num\\_CH-num\\_CH\\_desired|\\cdot\\;num\\_courses})
+
+There are multiple factors that go into this:
+- `AVG_GPA` is the average GPA of all the classes in a candidate schedule
+- `AVG_User_Rating` is the average of average ratings across all user-provided ratings for the classes in the schedule
+- `AVG_NN_Score` is the average NN rating. This rating takes into account temporal trends
+- `num_interest_courses` and `num_courses` correspond to how many courses align with a student's stream and the number of courses in the schedule
+- `num_CH` and `num_CH_desired` correspond to the total credit-hours of the schedule, and the amount the user wants to limit to.

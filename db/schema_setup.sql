@@ -29,7 +29,7 @@ DROP TABLE IF EXISTS student_info.courses;
 CREATE TABLE student_info.courses(
 	course_id VARCHAR(10) PRIMARY KEY NOT NULL UNIQUE, -- ex. CS126, CS498-DL
     credits INT NOT NULL, -- ex. 3 or 4 (for CS411)
-    interest VARCHAR(30) NOT NULL, -- ex: HPC, Big Data (analogous to "stream"),
+    interest JSON NOT NULL, -- ex: ["CS-ENG-HPC", "CS-ENG-Big Data", "CS-Minor"]. Holds multiple values.
     gpa FLOAT NOT NULL -- ex: 3.33
 );
 
