@@ -1,16 +1,34 @@
-import React from "react";
+import React, { useState, useEffect }  from "react";
 
 import { Formik } from "formik";
+import { Redirect } from 'react-router-dom';
 import * as Yup from "yup";
 import "./LoginStyle.css"
+
+const serverURL = process.env.REACT_APP_PROXY
 
 const Login = (props) => (
   <Formik
     initialValues={{ netid: "", password: "" }}
     onSubmit={(values, { setSubmitting }) => {
       setTimeout(() => {
-        console.log(props.userData);
-        console.log("Logging in", values);
+
+        fetch(serverURL + '/login-request?netid=' + values.netid + '&password=' + values.password,
+        {
+            method: 'GET',
+            headers: {
+              "Access-Control-Allow-Origin": "*"
+            }
+        })
+        .then(response => response.json())
+        .then((data) => {
+          if (data.userFound) {
+            props.loginFunc(values);
+          } else {
+            values.password = "inv";
+          }
+        });
+
         setSubmitting(false);
       }, 500);
     }}
@@ -19,6 +37,7 @@ const Login = (props) => (
           .required("Required"),
         password: Yup.string()
           .required("No password provided.")
+          .min(6, "Password should be 6 characters minimum."),
       })}
   >
     {props => {
@@ -31,8 +50,10 @@ const Login = (props) => (
         handleBlur,
         handleSubmit
       } = props;
-
+      
       return (
+        <div>
+        {localStorage.getItem('currentUser') && <Redirect to='/profile' />}
         <form onSubmit={handleSubmit}>
 
         <label htmlFor="netid">netID</label>
@@ -61,13 +82,14 @@ const Login = (props) => (
             onBlur={handleBlur}
             className={errors.password && touched.password && "error"}
         />
-        {errors.password && touched.password && (
+        {(errors.password && touched.password) || (values.password == "inv") && (
             <div className="input-feedback">{errors.password}</div>
         )}
 
         <button type="submit" disabled={isSubmitting}>Login</button>
 
         </form>
+        </div>
       );
     }}
   </Formik>

@@ -18,11 +18,11 @@ def processSurveyData(data: dict):
     :param data: JSON of data from request
     :return: tuples representing students, enrollments, and tracks
     """
-    startS, endS, currS, netID, name = data["StartingSem"], data["EndingSem"], data["CurrentSem"], data["NetID"], data["Name"]
+    startS, endS, currS, netID, name, password = data["StartingSem"], data["EndingSem"], data["CurrentSem"], data["NetID"], data["Name"], data["Password"]
     totalSem = convertSem(endS) - convertSem(startS) + 1
-    student = (netID, name, startS, currS, endS, totalSem)
+    student = (netID, name, password, startS, currS, endS, totalSem)
 
-    majors, minors = data["Majors"], data["Minors"]
+    majors, minors = list(data["Majors"]), list(data["Minors"])
     tracks = []
     for m in (majors + minors):
         tracks.append([m, "", 0, netID])
@@ -30,6 +30,6 @@ def processSurveyData(data: dict):
     enrollments = []
     if "classes" in data:
         for c in data["classes"]:
-            enrollments.append([netID, c[0], c[1], c[1], int(c[2])])
+            enrollments.append([netID, c['Course'], c['Sem'], c['Sem'], int(c['Rating'])])
 
     return student, enrollments, tracks

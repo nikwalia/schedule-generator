@@ -4,9 +4,10 @@ import json
 import time
 
 import pandas as pd
-from flask import Flask, request, send_from_directory, jsonify, redirect, url_for
+from flask import Flask, request, send_from_directory, jsonify, redirect, url_for, json
 from flask_cors import CORS
 from db.mysql_engine import * 
+from db.neo4j_engine import *
 from server.api.data_util import * 
 
 FIELD_NAME = 'field_name'
@@ -17,6 +18,7 @@ NET_ID = 'net_id'
 app = Flask(__name__)
 CORS(app)
 engine = loadEngine()
+neo4j_engine = loadNeo4JEngine()
 
 @app.route('/submit', methods=['GET', 'POST'])
 def submit_form(): 
@@ -25,11 +27,10 @@ def submit_form():
         data = request.data
         if data:
             data = json.loads(data.decode("utf-8").replace("'",'"'))
-            
             student, enrollments, tracks = processSurveyData(data)
-            insert = 'INSERT INTO student_info.student (net_id, student_name, start_semester, current_semester,' \
-                     'expected_graduation, total_semesters) VALUES("%s", "%s", "%s", "%s", "%s", %i)' % (student)
-            insert += 'ON DUPLICATE KEY UPDATE student_name="%s", start_semester="%s", current_semester="%s", ' \
+            insert = 'INSERT INTO student_info.student (net_id, student_name, pass_word, start_semester, current_semester,' \
+                     'expected_graduation, total_semesters) VALUES("%s", "%s", "%s", "%s", "%s", "%s", %i)' % (student)
+            insert += 'ON DUPLICATE KEY UPDATE student_name="%s", pass_word="%s", start_semester="%s", current_semester="%s", ' \
                       'expected_graduation="%s", total_semesters=%i' % tuple(student[1:])
             engine.raw_operation(insert)
             
@@ -43,7 +44,7 @@ def submit_form():
                 insert += 'ON DUPLICATE KEY UPDATE credit_hours=%i' % t[2]
                 engine.raw_operation(insert)
 
-            return data
+            return 'Successful submission'
         return "Invalid input"
 
 @app.route('/get-profile', methods=['GET'])
@@ -115,38 +116,58 @@ def delete_profile():
             return response
         return "Invalid netid"
 
-@app.route('/login-request')
+@app.route('/login-request', methods=['GET'])
 def login():
     """
     Validates login request.
-    usage: /login-request?netid=<netid>
+    usage: /login-request?netid=<netid>&password=<password>
     """
     if request.method == "GET":
         netid = request.args['netid']
+        password = request.args['password']
         if netid:
-            data = engine.wrapped_query('SELECT * FROM student_info.student WHERE net_id = "%s"' % netid, 'student').to_dict()
+            data = engine.wrapped_query('SELECT * FROM student_info.student WHERE net_id = "%s" AND pass_word = "%s"' % (netid, password), 'student').to_dict()
             response = jsonify({'userFound': len(data['net_id'])})
             response.headers.add('Access-Control-Allow-Origin', '*')
             return response
     return 'Invalid Netid'
 
-@app.route('/signup-request', methods=['GET', 'POST'])
-def signup():
-    if request.method == "POST":
-        data = request.data
-        if data:
-            data = json.loads(data.decode("utf-8").replace("'",'"'))
-            # TODO: process data into student and insert into SQL database
-            # note that we will have to retrieve semester info on signup
-             
-            curr_user_req = engine.wrapped_query('SELECT * FROM student_info.student WHERE net_id = "%s"' % netid, 'student').to_dict()
-
-            if len(curr_user_req['net_id']):
-                return "User exists already!"
+@app.route('/get-course', methods=['GET'])
+def get_course():
+    """
+    Retrieves course and details based on input.
+    usage: /get-course?courseid=<courseid>
+    """
+    if request.method == "GET":
+        courseid = request.args['courseid']
+        if courseid:
+            # Get class node from cypher query
+            data = neo4j_engine.wrapped_query('MATCH (p: Class {courseId: "%s"}) RETURN p' % courseid)[0]['p']
+            course_dict = {key : data[key] for key in data.keys()}
             
-            insert = 'INSERT INTO student_info.student (net_id, start_semester, current_semester, ' \
-                     'total_semesters) VALUES("%s", "%s", "%s", %i)' % (student)
-            engine.raw_operation(insert)
+            response = app.response_class(
+                response=json.dumps({'course': course_dict}['course']),
+                status=200,
+                mimetype='application/json'
+            )
+            response.headers.add('Access-Control-Allow-Origin', '*')
+            return response
+        return "Invalid netid"
 
-            return data
-        return "Invalid input"
+@app.route('/get-all-courses', methods=['GET'])
+def get_all_courses():
+    """
+    Retrieves an array of courses
+    usage: /get-all-courses
+    """
+    if request.method == "GET":
+        data = engine.wrapped_query('SELECT * FROM student_info.courses','courses').to_dict()
+        data = [entry for entry in data['course_id'].values()]
+        response = app.response_class(
+            response=json.dumps(data),
+            status=200,
+            mimetype='application/json'
+        )
+        response.headers.add('Access-Control-Allow-Origin', '*')
+        return response
+        

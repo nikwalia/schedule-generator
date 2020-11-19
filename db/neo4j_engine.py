@@ -1,6 +1,6 @@
 from neo4j import GraphDatabase
 import json
-
+import os
 
 class Neo4JEngine:
     def __init__(self, uri: str, username: str, password: str):
@@ -87,9 +87,9 @@ class Neo4JEngine:
         if self.__driver is None or self.__session is None:
             raise AttributeError("Driver or session are not initialized")
 
-        if 'MATCH' not in query.upper() or any(['MERGE', 'SET'] in query.upper()):
+        if 'MATCH' not in query.upper() or any(command in query.upper() for command in ['MERGE', 'SET']):
             raise ValueError('Command can only be a query')
-        response = [json.loads(s) for s in self.__session.run(query)]
+        response = [dict(s) for s in self.__session.run(query)]
         return response
 
 
@@ -166,3 +166,18 @@ class Neo4JEngine:
         classes = list(self.__session.run(subsequent_command))
 
         return classes
+
+def loadNeo4JEngine():
+    """
+    Creates a Neo4J engine instance.
+    """
+    server_info_path = ''
+    if 'api' in os.getcwd():
+        server_info_path += '../'
+    if 'server' in os.getcwd():
+        server_info_path += '../'
+    with open(server_info_path + "server_info", "r") as f:
+        _ = f.readline()
+        uri, username, password = f.readline().strip().split(',')
+    e = Neo4JEngine(uri, username, password)
+    return e
