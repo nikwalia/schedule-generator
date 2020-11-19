@@ -1,5 +1,11 @@
 # Needs to be run with root permissions. Guaranteed to work only on an Amazon Linux Image.
 
+# require "server_info" file
+if [ ! -f /home/ec2-user/schedule-generator/server_info ]; then
+    echo "Need to add server_info to root directory of Git repo"
+    exit 1
+fi
+
 # install Apache2 HTTP server
 sudo yum update && sudo yum upgrade -y
 sudo yum install httpd tmux -y
@@ -51,7 +57,7 @@ cd /home/ec2-user/schedule-generator/server
 sudo cp ./httpd.conf /etc/httpd/conf/httpd.conf
 
 # setting up flask
-cd api
+cd /home/ec2-user/schedule-generator/server/api
 tmux new-session -d -s backend 'flask run --host 0.0.0.0 --port 5000'
 
 # run website

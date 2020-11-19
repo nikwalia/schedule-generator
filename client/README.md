@@ -18,6 +18,8 @@ We use React as our main framework to support our front-end. As such you must ha
         - `Home.js`- Home page
         - `Login.js`- Login component
         - `LoginStyle.css`- Login component styles
+        - `Lookup.js` - Lookup component
+        - `LookupStyles.css` - Lookup styles component
         - `Profile.js`- Profile page 
         - `Signup.js`- Signup component
         - `Survey.js`- Survey page
@@ -33,3 +35,5 @@ We use React as our main framework to support our front-end. As such you must ha
 - `package-lock.json`- packages necessary to run 
 - `package.json`- configuration of webapp
 - `yarn.lock`-
+- `.env.development` - Config for development environment
+- `.env.production` - Config for production environment

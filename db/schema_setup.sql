@@ -13,9 +13,9 @@ CREATE TABLE student_info.student(
 
 DROP TABLE IF EXISTS student_info.track;
 CREATE TABLE student_info.track(
-	field_name VARCHAR(30) NOT NULL, -- ex. CS-ENG, CS-Minor, CS-X, ACC
+	field_name VARCHAR(120) NOT NULL, -- ex. CS-ENG, CS-Minor, CS-X, ACC
     -- field helps us determine which neural network to run and which Neo4J network to query
-    interest VARCHAR(30) NOT NULL, -- ex. HPC, Big Data
+    interest VARCHAR(50) NOT NULL, -- ex. HPC, Big Data
     -- interest helps us filter out classes post-network stage
     credit_hours INT NOT NULL, -- the number of credit hours a student allocates to that track
     net_id VARCHAR(8) REFERENCES student_info.student(net_id) -- ex. nikashw2

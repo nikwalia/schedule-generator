@@ -196,12 +196,12 @@ def loadEngine():
     if 'server' in os.getcwd():
         server_info_path += '../'
     with open(server_info_path + "server_info", "r") as f:
-       url = f.readline().strip()
+        url = f.readline().strip()
     e = MySQLEngine(url = 'mysql+py' + url)
     return e
 
 
 if __name__ == '__main__':
     with open("../server_info", "r") as f:
-        e = MySQLEngine(url = f.readline())
+        e = MySQLEngine(url = f.readline().strip())
         print(e.wrapped_query('SELECT * FROM student_info.courses', 'courses'))

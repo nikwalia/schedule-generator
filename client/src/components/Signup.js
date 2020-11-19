@@ -3,6 +3,7 @@ import React from "react";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import "./LoginStyle.css"
+import { Link } from "react-router-dom";
 
 const Signup = () => (
   <Formik
@@ -47,7 +48,7 @@ const Signup = () => (
 
         <form onSubmit={handleSubmit}>
 
-        <label htmlFor="netid">netID</label>
+        {/* <label htmlFor="netid">netID</label>
         <input
             id="netid"
             name="netid"
@@ -90,9 +91,11 @@ const Signup = () => (
         />
         {errors.passwordConfirm && touched.passwordConfirm && (
             <div className="input-feedback">{errors.passwordConfirm}</div>
-        )}
-
-        <button type="submit" disabled={isSubmitting}>Create Account</button>
+        )} */}
+        
+        <Link to='/survey'>
+        <button type="submit" disabled={isSubmitting}>Fill out the survey</button>
+        </Link>
 
         </form>
         </div>

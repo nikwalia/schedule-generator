@@ -5,7 +5,7 @@ The `conda` Python package manager has been used to install all software maintai
 
 After installing Anaconda, all dependencies can be installed with the following commands:
 
-`conda install numpy pandas sqlalchemy flask python-dotenv -y`
+`conda install numpy pandas sqlalchemy flask flask-cors python-dotenv -y`
 
 `pip install neo4j`
 
@@ -33,10 +33,16 @@ Note the above is handled through the server setup script.
 ## First-Time Setup on EC2
 - SSH into the server. Make sure Git is installed (`sudo yum install git -y`).
 - Clone this repository.
+- Add a `server_info` to the top-level of the directory.
+   - First line: MySQL access URI string (contains username and password)
+   - Second line: Neo4J access URI, username,  password (comma-separated without spaces)
 - Run the setup script in `server/setup.sh`.
 
 ## Configuring sqlalchemy connections through Python:
 Strings should be configured as `mysql://user_name:password@endpoint`. Refer to `demo_connect_db.py` for an example.
+
+## Configuring Neo4J connections through Python:
+Strings should be configured as `bolt://uri:7687` with a username and password. Refer to `demo-connect_neo4j.py` for an example.
 
 ## Files and directories:
 - `demo_connect_db.py`- a demo script for connecting to RDS.
