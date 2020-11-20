@@ -79,9 +79,10 @@ const SurveySchema = Yup.object().shape({
             }),
       Sem: Yup.string()
           .required('Required')
-          .matches(/(?:FA|SP)(?:1[0-9]|2[0-2])/ , 'Semester is not in the correct format')
+          .matches(/(BEFORE)|(?:FA|SP)(?:1[0-9]|2[0-2])/ , 'Semester is not in the correct format')
           .test('test-compare semesters', 'Semester not between start and end semesters',
             function(value) {
+              if (this.resolve(Yup.ref("Sem")) == "BEFORE") return true;
               if (!this.resolve(Yup.ref("EndingSem")) || !this.resolve(Yup.ref("StartingSem"))) return true;
               return semGreaterThan(this.resolve(Yup.ref("CurrentSem")), this.resolve(Yup.ref("StartingSem"))) &&
               semGreaterThan(this.resolve(Yup.ref("EndingSem")), this.resolve(Yup.ref("CurrentSem")));
@@ -328,7 +329,7 @@ export default function Survey(props) {
             <br />
 
             <p>Please enter your classes below. For each class, you can indicate the course ID (e.g. CS 411), 
-               semester you took it in (e.g. "FA20"), and rating 1-10 (1 being the worst).</p>
+               semester you took it in (e.g. "FA20" or "BEFORE" if you took it before college), and rating 1-10 (1 being the worst).</p>
 
             <FieldArray
              name="classes"
