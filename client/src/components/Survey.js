@@ -82,7 +82,7 @@ const SurveySchema = Yup.object().shape({
           .matches(/(BEFORE)|(?:FA|SP)(?:1[0-9]|2[0-2])/ , 'Semester is not in the correct format')
           .test('test-compare semesters', 'Semester not between start and end semesters',
             function(value) {
-              if (this.resolve(Yup.ref("Sem")) == "BEFORE") return true;
+              if (this.resolve(Yup.ref("Sem")) === "BEFORE") return true;
               if (!this.resolve(Yup.ref("EndingSem")) || !this.resolve(Yup.ref("StartingSem"))) return true;
               return semGreaterThan(this.resolve(Yup.ref("CurrentSem")), this.resolve(Yup.ref("StartingSem"))) &&
               semGreaterThan(this.resolve(Yup.ref("EndingSem")), this.resolve(Yup.ref("CurrentSem")));
@@ -170,7 +170,7 @@ export default function Survey(props) {
   useEffect(() => {
   
     // If nothing in cached courseList, retrieve list of courses
-    if (courseList.length == 0) {
+    if (courseList.length === 0) {
       fetch(serverURL + '/get-all-courses',
       {
           method: 'GET',
@@ -187,7 +187,7 @@ export default function Survey(props) {
     
     // Prevent resubmission if a form has already been submitted
     setNetid(localStorage.getItem('currentUser'));
-    if (netid == SUBMITTED) {
+    if (netid === SUBMITTED) {
       alert("You've already submitted a form. You won't be able to submit again!");
     } else if (netid) {
       // Autofill in survey entries based on cached netid
@@ -231,7 +231,7 @@ export default function Survey(props) {
         onSubmit={async (values) => {
             console.log('Submitting survey.');
 
-            if (netid != SUBMITTED) {
+            if (netid !== SUBMITTED) {
               const requestOptions = {
                 method: 'POST',
                 // headers: {
@@ -242,7 +242,7 @@ export default function Survey(props) {
                 body: JSON.stringify(values)
               };
 
-              const response = await fetch(serverURL + '/submit', requestOptions)
+              await fetch(serverURL + '/submit', requestOptions)
                   .then(response => console.log(response))
                   .catch(error => console.error('Error:', error));
 
@@ -344,7 +344,7 @@ export default function Survey(props) {
                        <Field name={`classes.${index}.Sem`} placeholder="Semester (e.g. FA20)" id="Sem"/>
                        <Field name={`classes.${index}.Rating`} placeholder="Rating (e.g. 10)" id="Rating"/>
 
-                       {index == values.classes.length-1 ? (
+                       {index === values.classes.length-1 ? (
                          <div>
                           <button
                             type="button"
