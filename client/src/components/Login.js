@@ -1,4 +1,4 @@
-import React, { useState, useEffect }  from "react";
+import React  from "react";
 
 import { Formik } from "formik";
 import { Redirect } from 'react-router-dom';
@@ -25,7 +25,7 @@ const Login = (props) => (
           if (data.userFound) {
             props.loginFunc(values);
           } else {
-            values.password = "inv";
+            alert("Invalid login. Try again!")
           }
         });
 
@@ -34,10 +34,11 @@ const Login = (props) => (
     }}
     validationSchema={Yup.object().shape({
         netid: Yup.string()
+          .max(8, "NetID can't be longer than 8 characters")
           .required("Required"),
         password: Yup.string()
           .required("No password provided.")
-          .min(6, "Password should be 6 characters minimum."),
+          .min(6, "Password should be 10 characters minimum."),
       })}
   >
     {props => {
@@ -82,7 +83,7 @@ const Login = (props) => (
             onBlur={handleBlur}
             className={errors.password && touched.password && "error"}
         />
-        {(errors.password && touched.password) || (values.password == "inv") && (
+        {errors.password && touched.password && (
             <div className="input-feedback">{errors.password}</div>
         )}
 

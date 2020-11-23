@@ -13,20 +13,26 @@ const serverURL = process.env.REACT_APP_PROXY
 
 function Lookup() {
   const [course, setCourse] = useState('');
-  const [courseList, setCourseList] = useState([]);
+  const [courseList, setCourseList] = useState(localStorage.getItem('courseList') || []);
 
   useEffect(() => {
-    fetch(serverURL + '/get-all-courses',
-    {
-        method: 'GET',
-        headers: {
-            "Access-Control-Allow-Origin": "*"
-        }
-    })
-    .then(response => response.json())
-    .then(data => {
-      setCourseList(data);
-    });
+
+    if (courseList.length === 0) {
+      fetch(serverURL + '/get-all-courses',
+      {
+          method: 'GET',
+          headers: {
+              "Access-Control-Allow-Origin": "*"
+          }
+      })
+      .then(response => response.json())
+      .then(data => {
+        setCourseList(data);
+        localStorage.setItem('courseList', data);
+      });
+    } else if (courseList.length !== 0 && typeof courseList === 'string') {
+      setCourseList(courseList.split(','));
+    }
   }, []);
 
   function handleSelect(selected) {
@@ -77,9 +83,10 @@ function Lookup() {
           )}
       </Typeahead>
       {course && <div>
-              <p>Course: {JSON.stringify(course)}</p> 
-              {/* Insert Course Info here */}
-              {/* <p>Course Description {JSON.stringify(.course[0])}</p>   */}
+              <h2>{course.courseId}: {course.courseTitle}</h2>  
+              <p>Credit Hours: {course.creditHours}</p>
+              <p>GPA: {course.GPA}</p>    
+              <p>Course Description: {course.description}</p>  
             </div>}
 
     </div>
