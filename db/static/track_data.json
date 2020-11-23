@@ -1,0 +1,72 @@
+{
+    "CS-ENG-General": [
+                        "PHYS 211", "PHYS 212", "MATH 220", "MATH 221", "MATH 231", "MATH 241", "MATH 415",
+                        "MATH 416", "CS 125", "CS 126", "CS 173", "CS 210", "ECE 316", "CS 225", "CS 233",
+                        "CS 241", "CS 357", "CS 361", "CS 374", "CS 421",
+                        "CS 410", "CS 411", "CS 412", "CS 413", "CS 414", "CS 418", "CS 419", "CS 422", "CS 423",
+                        "CS 424", "CS 425", "CS 426", "CS 427", "CS 428", "CS 429", "CS 431", "CS 433", "CS 436",
+                        "CS 438", "CS 439", "CS 440", "CS 443", "CS 445", "CS 446", "CS 450", "CS 457", "CS 460",
+                        "CS 461", "CS 463", "CS 465", "CS 466", "CS 467", "CS 468", "CS 473", "CS 475", "CS 476",
+                        "CS 477", "CS 481", "CS 482", "CS 483", "CS 484", "CS 492", "CS 493", "CS 494", "CS 498",
+                        "CS 510", "CS 511", "CS 512", "CS 519", "CS 522", "CS 523", "CS 524", "CS 525", "CS 526",
+                        "CS 527", "CS 528", "CS 533", "CS 536", "CS 538", "CS 541", "CS 543", "CS 544", "CS 546",
+                        "CS 548", "CS 554", "CS 555", "CS 556", "CS 558", "CS 563", "CS 565", "CS 566", "CS 571",
+                        "CS 572", "CS 573", "CS 574", "CS 575", "CS 576", "CS 579", "CS 583", "CS 584", "CS 598"
+    ],
+    "CS-ENG-Software Foundations": [
+                        "PHYS 211", "PHYS 212", "MATH 220", "MATH 221", "MATH 231", "MATH 241", "MATH 415",
+                        "MATH 416", "CS 125", "CS 126", "CS 173", "CS 210", "ECE 316", "CS 225", "CS 233",
+                        "CS 241", "CS 357", "CS 361", "CS 374", "CS 421",
+                        "CS 422", "CS 426", "CS 427", "CS 428", "CS 429", "CS 476", "CS 477", "CS 492", "CS 493",
+                        "CS 494", "CS 498", "CS 522", "CS 524", "CS 526", "CS 527", "CS 528", "CS 576", "CS 598"
+    ],
+    "CS-ENG-Algorithms and Models of Computation": [
+                        "PHYS 211", "PHYS 212", "MATH 220", "MATH 221", "MATH 231", "MATH 241", "MATH 415",
+                        "MATH 416", "CS 125", "CS 126", "CS 173", "CS 210", "ECE 316", "CS 225", "CS 233",
+                        "CS 241", "CS 357", "CS 361", "CS 374", "CS 421",
+                        "CS 413", "CS 473", "CS 475", "CS 476", "CS 477", "CS 481", "CS 482", "CS 498", "CS 571",
+                        "CS 572", "CS 573", "CS 574", "CS 575", "CS 576", "CS 579", "CS 583", "CS 584", "CS 598"
+    ],
+    "CS-ENG-Intelligence and Big Data": [
+                        "PHYS 211", "PHYS 212", "MATH 220", "MATH 221", "MATH 231", "MATH 241", "MATH 415",
+                        "MATH 416", "CS 125", "CS 126", "CS 173", "CS 210", "ECE 316", "CS 225", "CS 233",
+                        "CS 241", "CS 357", "CS 361", "CS 374", "CS 421",
+                        "CS 410", "CS 411", "CS 412", "CS 414", "CS 440", "CS 443", "CS 445", "CS 446", "CS 466",
+                        "CS 467", "CS 498", "CS 510", "CS 511", "CS 512", "CS 543", "CS 544", "CS 546", "CS 548",
+                        "CS 566", "CS 576", "CS 598"
+    ],
+    "CS-ENG-Human and Social Impact": [
+                        "PHYS 211", "PHYS 212", "MATH 220", "MATH 221", "MATH 231", "MATH 241", "MATH 415",
+                        "MATH 416", "CS 125", "CS 126", "CS 173", "CS 210", "ECE 316", "CS 225", "CS 233",
+                        "CS 241", "CS 357", "CS 361", "CS 374", "CS 421",
+                        "CS 460", "CS 461", "CS 463", "CS 465", "CS 467", "CS 468", "CS 498", "CS 563", "CS 565"
+    ],
+    "CS-ENG-Media": [
+                        "PHYS 211", "PHYS 212", "MATH 220", "MATH 221", "MATH 231", "MATH 241", "MATH 415",
+                        "MATH 416", "CS 125", "CS 126", "CS 173", "CS 210", "ECE 316", "CS 225", "CS 233",
+                        "CS 241", "CS 357", "CS 361", "CS 374", "CS 421",
+                        "CS 414", "CS 418", "CS 419", "CS 445", "CS 465", "CS 467", "CS 468", "CS 498", "CS 519",
+                        "CS 565", "CS 598"
+    ],
+    "CS-ENG-Scientific, Parallel, and High Performance Computing": [
+                        "PHYS 211", "PHYS 212", "MATH 220", "MATH 221", "MATH 231", "MATH 241", "MATH 415",
+                        "MATH 416", "CS 125", "CS 126", "CS 173", "CS 210", "ECE 316", "CS 225", "CS 233",
+                        "CS 241", "CS 357", "CS 361", "CS 374", "CS 421",
+                        "CS 419", "CS 450", "CS 457", "CS 466", "CS 482", "CS 483", "CS 484", "CS 498", "CS 519",
+                        "CS 554", "CS 555", "CS 556", "CS 558"
+    ],
+    "CS-ENG-Distributed Systems, Networking, and Security": [
+                        "PHYS 211", "PHYS 212", "MATH 220", "MATH 221", "MATH 231", "MATH 241", "MATH 415",
+                        "MATH 416", "CS 125", "CS 126", "CS 173", "CS 210", "ECE 316", "CS 225", "CS 233",
+                        "CS 241", "CS 357", "CS 361", "CS 374", "CS 421",
+                        "CS 423", "CS 424", "CS 425", "CS 431", "CS 436", "CS 438", "CS 439", "CS 460", "CS 461",
+                        "CS 463", "CS 483", "CS 484", "CS 498", "CS 523", "CS 524", "CS 525", "CS 538", "CS 563"
+    ],
+    "CS-ENG-Machines": [
+                        "PHYS 211", "PHYS 212", "MATH 220", "MATH 221", "MATH 231", "MATH 241", "MATH 415",
+                        "MATH 416", "CS 125", "CS 126", "CS 173", "CS 210", "ECE 316", "CS 225", "CS 233",
+                        "CS 241", "CS 357", "CS 361", "CS 374", "CS 421",
+                        "CS 423", "CS 424", "CS 426", "CS 431", "CS 433", "CS 484", "CS 498", "CS 523", "CS 526",
+                        "CS 533", "CS 536", "CS 541", "CS 584", "CS 598"
+    ]
+}
