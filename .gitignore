@@ -139,3 +139,4 @@ data/
 *.pem
 
 server_info
+saved_models/
