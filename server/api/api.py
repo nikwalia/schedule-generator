@@ -56,7 +56,7 @@ def get_profile():
     if request.method == "GET":
         netid = request.args['netid']
         if netid:
-            data = engine.wrapped_query('SELECT * FROM student_info.student WHERE net_id = "%s"' % netid, 'student').to_dict()
+            data = engine.wrapped_query('SELECT * FROM student_info.student WHERE net_id = "%s"' % netid).to_dict()
             response = jsonify(data)
             response.headers.add('Access-Control-Allow-Origin', '*')
             return response
@@ -72,9 +72,9 @@ def get_survey():
         netid = request.args['netid']
         if netid:
             # Retrieve all relevant data via netid
-            student_data = engine.wrapped_query('SELECT * FROM student_info.student WHERE net_id = "%s"' % netid, 'student').to_dict()
-            enrollments_data = engine.wrapped_query('SELECT * FROM student_info.enrollments WHERE net_id = "%s"' % netid, 'enrollments').to_dict()
-            track_data = engine.wrapped_query('SELECT * FROM student_info.track WHERE net_id = "%s"' % netid, 'track').to_dict()
+            student_data = engine.wrapped_query('SELECT * FROM student_info.student WHERE net_id = "%s"' % netid).to_dict()
+            enrollments_data = engine.wrapped_query('SELECT * FROM student_info.enrollments WHERE net_id = "%s"' % netid).to_dict()
+            track_data = engine.wrapped_query('SELECT * FROM student_info.track WHERE net_id = "%s"' % netid).to_dict()
             
             # Initialize empty structures for splitting track_data
             minors = {FIELD_NAME: {}, INTEREST: {}, CREDIT_HOURS: {}, NET_ID: {}}
@@ -126,7 +126,7 @@ def login():
         netid = request.args['netid']
         password = request.args['password']
         if netid:
-            data = engine.wrapped_query('SELECT * FROM student_info.student WHERE net_id = "%s" AND pass_word = "%s"' % (netid, password), 'student').to_dict()
+            data = engine.wrapped_query('SELECT * FROM student_info.student WHERE net_id = "%s" AND pass_word = "%s"' % (netid, password)).to_dict()
             response = jsonify({'userFound': len(data['net_id'])})
             response.headers.add('Access-Control-Allow-Origin', '*')
             return response
@@ -161,7 +161,7 @@ def get_all_courses():
     usage: /get-all-courses
     """
     if request.method == "GET":
-        data = engine.wrapped_query('SELECT * FROM student_info.courses','courses').to_dict()
+        data = engine.wrapped_query('SELECT * FROM student_info.courses').to_dict()
         data = [entry for entry in data['course_id'].values()]
         response = app.response_class(
             response=json.dumps(data),

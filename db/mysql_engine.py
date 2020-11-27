@@ -67,12 +67,11 @@ class MySQLEngine:
         return [row[1] for row in self.__connection.execute('SHOW COLUMNS FROM student_info.%s' % table_name)]
     
 
-    def wrapped_query(self, query: str, table_name: str):
+    def wrapped_query(self, query: str):
         """
         Gets data and returns it in a Pandas dataframe
         
         :param query: string query to execute
-        :param table_name: string table name to fetch from
         
         :return: Pandas DataFrame containing query results
         """
@@ -81,7 +80,7 @@ class MySQLEngine:
         if 'SELECT' not in query:
             raise ValueError('Retrieving data only')
         _res = self.__connection.execute(query)
-        _table_headers = self.__get_headers(table_name)
+        _table_headers = _res.keys()
         _dat = []
         for _row in _res:
             _dat.append(_row)
@@ -204,4 +203,4 @@ def loadEngine():
 if __name__ == '__main__':
     with open("../server_info", "r") as f:
         e = MySQLEngine(url = f.readline().strip())
-        print(e.wrapped_query('SELECT * FROM student_info.courses', 'courses'))
+        print(e.wrapped_query('SELECT * FROM student_info.courses'))

@@ -4,6 +4,7 @@
 - `db` contains necessary instructions for MySQL server initialization and connection on Amazon RDS, as well as other SQL scripts
 - `server` contains Flask server backend instructions, Amazon EC2 server setup instructions, and code for fetching/transferring data
 - `client` contains JS user-facing code
+- `model` contains the neural network that powers schedule generation and recommendation
 
 ### Local dependencies:
 - A local SSH client is necessary to connect to AWS
@@ -11,6 +12,10 @@
 - Python3 (conda distribution preferred):
     - `conda install numpy pandas pathlib tqdm neo4j sqlalchemy flask flask-cors -y`
     - `pip install neo4j python-dotenv`
+
+### Setup Script
+To install the module run `python setup.py install`. 
+To clean the module from the directory run `bash clean_install.sh`
 
 ### Advanced Function 1
 The advanced function is used to generate an optimal schedule. Scores are calculated based off of this formula:

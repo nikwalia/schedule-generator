@@ -20,6 +20,7 @@ echo 'export PATH=/home/ec2-user/anaconda/bin:$PATH' >> ~/.bashrc
 source ~/.bashrc
 conda install numpy pandas pymysql sqlalchemy flask flask-cors -y
 pip install neo4j python-dotenv
+conda install pytorch cpuonly -c pytorch -y
 
 # set up Neo4J through Docker
 sudo amazon-linux-extras install docker -y

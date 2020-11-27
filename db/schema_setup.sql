@@ -8,7 +8,7 @@ CREATE TABLE student_info.student(
     current_semester VARCHAR(10) NOT NULL, -- ex: FA20
     expected_graduation VARCHAR(10) NOT NULL, -- ex: FA22
     total_semesters INT NOT NULL DEFAULT 0, -- 8
-    CHECK (pass_word = NULL OR (LENGTH(pass_word) > 10)) -- requires password of length greater than 10 and less than 30
+    CHECK (pass_word = NULL OR (LENGTH(pass_word) >= 10)) -- requires password of length greater than 9 and less than 30
 );
 
 DROP TABLE IF EXISTS student_info.track;
@@ -35,8 +35,12 @@ CREATE TABLE student_info.courses(
 
 DROP TABLE IF EXISTS student_info.enrollments;
 CREATE TABLE student_info.enrollments(
-	net_id VARCHAR(8) NOT NULL REFERENCES student_info.student(net_id), -- ex. nikashw2
-    course_id VARCHAR(10) NOT NULL REFERENCES student_info.courses(course_id), -- ex. CS126, CS498-DL
+	net_id VARCHAR(8) NOT NULL REFERENCES student_info.student(net_id)
+	ON DELETE CASCADE
+    ON UPDATE CASCADE, -- ex. nikashw2
+    course_id VARCHAR(10) NOT NULL REFERENCES student_info.courses(course_id)
+	ON DELETE CASCADE
+    ON UPDATE CASCADE, -- ex. CS126, CS498-DL
     semester VARCHAR(10) NOT NULL, -- ex. FA20. Any credits before college are labeled as "BEFORE".
     -- to guarantee semester validity, make a drop-down in the front-end
     semester_taken INT NOT NULL DEFAULT 0,
