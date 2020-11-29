@@ -38,7 +38,7 @@
     - `score_schedule_procedure.sql`- finds the best schedule to take based on historical trends and past user data.
     - `convert_semester.sql`- contains a function for auto-converting a text semester to a numerical representation.
     - `semester_offset_trigger.sql`- creates a trigger for auto-calculating the semester offset whenever a new enrollment is stored.
-    - `update_enrollment_semester_trigger.sql`- creates a trigger for recalculating the semester offset whenever an enrollment is updated.
+    - `update_enrollment_semester.sql`- creates a trigger for recalculating the semester offset whenever an enrollment is updated.
     - `total_semesters_trigger.sql`- creates a trigger for calculating the number of semesters a student plans to study for.
     - `enforce_precision_trigger.sql`- creates a trigger that limits the number of decimals for course GPA to 2 (aka 3 significant digits)
 - `Python`:
@@ -46,6 +46,8 @@
     - `neo4j_engine.py`- a wrapper engine for interacting with a Neo4J remote DBMS.
     - `initialize_courses.py`- uploads all courses to the MySQL RDS instance.
     - `initialize_prereqs.py`- parses thru downloaded CSVs and uploads relationships to the Neo4J database.
+- static:
+    - `track_data.json`- contains what classes contribute towards a particular track+interest.
 
 ## Setting up Neo4J Server on AWS
 

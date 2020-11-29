@@ -9,6 +9,7 @@ We use React as our main framework to support our front-end. As such you must ha
     - It is also worth defining a script to help start up the backend for local development.
 - You can run the React application by navigating into `client` and running `npm start`.
 - The browser should automatically open up the webpage; however, your console will have a link to it as well.
+- To create an optimized build, run `npm start build`. Install `serve` (`npm install -g serve`) and then host using `serve -s build`.
 
 ## Files and directories:
 - `public`

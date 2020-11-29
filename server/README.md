@@ -28,13 +28,13 @@ Note the above is handled through the server setup script.
 - Review and then click "Launch". Make sure to save the .pem file for enabling access.
 
 ## Connecting to the EC2 instance
-- To SSH into the site, use the following command: `ssh -i /path/to/your/.pem username@public_ipv4_address`. The default username is `ec2-user` and the public IPv4 address can be obtained on the EC2 instance monitoring dashboard.
+- To SSH into the site, use the following command: `ssh -i /path/to/your/.pem username@public_ipv4_address/database`. The default username is `ec2-user` and the public IPv4 address can be obtained on the EC2 instance monitoring dashboard.
 
 ## First-Time Setup on EC2
 - SSH into the server. Make sure Git is installed (`sudo yum install git -y`).
 - Clone this repository.
 - Add a `server_info` to the top-level of the directory.
-   - First line: MySQL access URI string (contains username and password)
+   - First line: MySQL access URI string (contains username, password, and database)
    - Second line: Neo4J access URI, username,  password (comma-separated without spaces)
 - Run the setup script in `server/setup.sh`.
 
@@ -47,5 +47,10 @@ Strings should be configured as `bolt://uri:7687` with a username and password. 
 ## Files and directories:
 - `demo_connect_db.py`- a demo script for connecting to RDS.
 - `demo_connect_neo4j.py`- a demo script for connecting to Neo4J's remote DBMS.
+- `httpd.conf`- a config file for the Apache HTTPD server
+- `setup.sh`- used for initializing the entire server
 - `utils`:
    - `course_explorer_parser.py`- scrapes UIUC's courses in XML form and returns CSV files.
+- `api`:
+   - `api.py`- endpoints for the Flask server for all website functionality
+   - `data_util.py`- helps with data processing.

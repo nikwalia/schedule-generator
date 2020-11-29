@@ -8,10 +8,11 @@
 
 ### Local dependencies:
 - A local SSH client is necessary to connect to AWS
-- Installation of Neo4J Engine is recommended
+- Installation of Neo4J Desktop is recommended
 - Python3 (conda distribution preferred):
-    - `conda install numpy pandas pathlib tqdm neo4j sqlalchemy flask flask-cors -y`
+    - `conda install numpy pandas pathlib tqdm neo4j pymysql sqlalchemy flask flask-cors -y`
     - `pip install neo4j python-dotenv`
+    - `conda install pytorch cpuonly -c pytorch -y`
 
 ### Setup Script
 To install the module run `python setup.py install`. 
