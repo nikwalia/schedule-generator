@@ -126,7 +126,14 @@ class Neo4JEngine:
                 "RETURN c.courseId"
         matched_classes = self.__session.run(class_command)
         matched_classes = [record[0] for record in matched_classes]
-        return list(set(matched_classes) - set(prereqs))
+
+        duplicate_command = "MATCH (c: Class)-[:PREREQ]->(:OR)<-[:PREREQ]-(c1: Class)\n" \
+                "WHERE c.courseId IN " + str(prereqs) + "\n" \
+                "RETURN c1.courseId"
+        matched_duplicates = self.__session.run(duplicate_command)
+        matched_duplicates = [record[0] for record in matched_duplicates]
+
+        return list(set(matched_classes) - set(prereqs) - set(matched_duplicates))
 
 
     def get_class_description(self, class_name: str):
