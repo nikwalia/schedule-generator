@@ -170,4 +170,45 @@ def get_all_courses():
         )
         response.headers.add('Access-Control-Allow-Origin', '*')
         return response
-        
+
+@app.route('/add-schedule', methods=['GET', 'POST'])
+def add_schedule():
+    """
+    Adds a schedule to the database, splitting it up into its different streams
+    """
+    if request.method == 'POST':
+        data = request.data
+        if data:
+            
+            data = json.loads(data.decode("utf-8").replace("'",'"'))
+            net_id = data['NetID']
+            schedule_id = data['ScheduleID']
+
+            user_track_info = engine.wrapped_query(
+                                        "SELECT CONCAT(track.field_name, track.interest) AS tag\n" \
+                                        "FROM student_info.track\n" \
+                                        "WHERE track.net_id = {}".format(net_id))
+
+            semester = engine.wrapped_query(
+                                        "SELECT student.current_semester\n" \
+                                        "FROM student_info.student\n" \
+                                        "WHERE student.net_id = {}".format(net_id))
+
+            with open('../../db/static/track_data.json', 'r') as f:
+                all_track_info = json.load(f)
+
+            schedule_res = []
+            classes = set(data['classes'])
+            for track in user_track_info:
+                match_classes = classes & set(all_track_info[track])
+                schedule_res.append((net_id, semester, track.split('-')[0], track.split('-')[-1], schedule_id, str(list(match_classes))))
+                classes = classes - match_classes
+
+                if len(classes) == 0:
+                    break
+            
+            df = pd.DataFrame(columns=['net_id', 'semester', 'field_name', 'interest', 'schedule_id', 'schedule'], schedule_res)
+            engine.insert_df(df)
+            
+            return 'Successful submission'
+        return "Invalid input"

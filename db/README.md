@@ -37,15 +37,18 @@
     - `top_class_frequency_procedure.sql`- finds the semester when a class is most often taken.
     - `score_schedule_procedure.sql`- finds the best schedule to take based on historical trends and past user data.
     - `convert_semester.sql`- contains a function for auto-converting a text semester to a numerical representation.
+    - `schedule_statistics_procedure.sql`- calculates all SQL-generated stats necessary for rating a formula.
     - `semester_offset_trigger.sql`- creates a trigger for auto-calculating the semester offset whenever a new enrollment is stored.
     - `update_enrollment_semester.sql`- creates a trigger for recalculating the semester offset whenever an enrollment is updated.
     - `total_semesters_trigger.sql`- creates a trigger for calculating the number of semesters a student plans to study for.
-    - `enforce_precision_trigger.sql`- creates a trigger that limits the number of decimals for course GPA to 2 (aka 3 significant digits)
+    - `enforce_precision_trigger.sql`- creates a trigger that limits the number of decimals for course GPA to 2 (aka 3 significant digits).
+    - `convert_interest_to_general_trigger.sql`- creates a trigger for ensuring that an empty "interest" in a track translates to "General".
 - `Python`:
     - `mysql_engine.py`- a wrapper engine for interacting with a MySQL RDS instance.
     - `neo4j_engine.py`- a wrapper engine for interacting with a Neo4J remote DBMS.
     - `initialize_courses.py`- uploads all courses to the MySQL RDS instance.
     - `initialize_prereqs.py`- parses thru downloaded CSVs and uploads relationships to the Neo4J database.
+    - `utils.py`- helpers for parsing through CSVs scraped from courses.illinois.edu.
 - static:
     - `track_data.json`- contains what classes contribute towards a particular track+interest.
 
