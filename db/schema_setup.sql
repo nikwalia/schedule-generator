@@ -13,7 +13,7 @@ CREATE TABLE student_info.student(
 
 DROP TABLE IF EXISTS student_info.track;
 CREATE TABLE student_info.track(
-	field_name VARCHAR(120) NOT NULL, -- ex. CS-ENG, CS-Minor, CS-X, ACC
+	field_name VARCHAR(120) NOT NULL, -- ex. Computer Science, BS
     -- field helps us determine which neural network to run and which Neo4J network to query
     interest VARCHAR(50) NOT NULL, -- ex. HPC, Big Data
     -- interest helps us filter out classes post-network stage
@@ -21,7 +21,7 @@ CREATE TABLE student_info.track(
     net_id VARCHAR(8) REFERENCES student_info.student(net_id) -- ex. nikashw2
     ON DELETE CASCADE
     ON UPDATE CASCADE,
-    PRIMARY KEY(net_id, field_name, interest)
+    PRIMARY KEY(net_id, field_name)
     -- to guarantee field/interest validity, make a drop-down in the front-end
 );
 
@@ -29,7 +29,7 @@ DROP TABLE IF EXISTS student_info.courses;
 CREATE TABLE student_info.courses(
 	course_id VARCHAR(10) PRIMARY KEY NOT NULL UNIQUE, -- ex. CS126, CS498-DL
     credits INT NOT NULL, -- ex. 3 or 4 (for CS411)
-    interest JSON NOT NULL, -- ex: ["CS-ENG-HPC", "CS-ENG-Big Data", "CS-Minor"]. Holds multiple values.
+    interest JSON NOT NULL, -- ex: ["Computer Science, BS-HPC", "Computer Science-Big Data", "CS-Minor"]. Holds multiple values.
     gpa FLOAT NOT NULL -- ex: 3.33
 );
 
@@ -46,4 +46,21 @@ CREATE TABLE student_info.enrollments(
     semester_taken INT NOT NULL DEFAULT 0,
     rating INT NOT NULL CHECK (rating >= 0 AND rating <= 10), -- fixed range
     PRIMARY KEY(net_id, course_id)
+);
+
+DROP TABLE IF EXISTS student_info.schedules;
+CREATE TABLE student_info.schedules(
+	rowid INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    net_id VARCHAR(8) NOT NULL REFERENCES student_info.student(net_id)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
+    semester VARCHAR(10) NOT NULL,
+    field_name VARCHAR(120) NOT NULL REFERENCES student_info.track(field_name)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
+    interest VARCHAR(50) NOT NULL REFERENCES student_info.track(interest)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
+    schedule_id INT NOT NULL,
+    schedule JSON NOT NULL
 );

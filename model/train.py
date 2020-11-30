@@ -136,9 +136,9 @@ def main(ap: argparse.ArgumentParser):
     ap.add_argument("--epochs", type=int, default=5, help="Number of epochs to train for")
     ap.add_argument("--batchsize", type=int, default=5, help="Batch size for data iteration")
     ap.add_argument("--hiddensize", type=int, default=256, help="Size for hidden layer")
-    ap.add_argument("--traindata", type=str, default="CS-ENG-General", help="Track for train data")
-    ap.add_argument("--validdata", type=str, default="CS-ENG-General", help="Track for validation data")
-    ap.add_argument("--testdata", type=str, default="CS-ENG-General", help="Track for test data")
+    ap.add_argument("--traindata", type=str, default="Computer Science, BS-General", help="Track for train data")
+    ap.add_argument("--validdata", type=str, default="Computer Science, BS-General", help="Track for validation data")
+    ap.add_argument("--testdata", type=str, default="Computer Science, BS-General", help="Track for test data")
     ap.add_argument("--device", type=str, default="cpu", help="Device to train on")
     args = ap.parse_args()
 

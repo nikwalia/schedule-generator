@@ -2,7 +2,7 @@ CREATE DEFINER=`admin`@`%` PROCEDURE `score_classes`(
 	IN user_netid VARCHAR(10), -- EX- nikashw2
 	IN class_data JSON, -- has format '[{"course_id": "course 1", "score": score_of_neural_network}...]'
     IN credit_limit INT, -- 0 < credit_limit <= 18
-    IN user_interest VARCHAR(15), -- EX- CS-ENG-HPC, CS-MINOR
+    IN user_interest VARCHAR(15), -- EX- Computer Science, BS-HPC, CS-MINOR
     OUT best_schedule VARCHAR(200) -- has format course_1,course_2...
 )
 BEGIN
