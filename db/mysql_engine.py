@@ -54,13 +54,7 @@ class MySQLEngine:
         """
         return self.__connection is not None and self.__engine is not None
 
-    
-    def __get_headers(self, table_name: str):
-        if self.__engine is None or self.__connection is None:
-            raise AttributeError("Engine or connection are not initialized")
-        return [row[0] for row in self.__connection.execute('SHOW COLUMNS FROM student_info.%s' % table_name)]
 
-    
     def __get_header_types(self, table_name: str):
         if self.__engine is None or self.__connection is None:
             raise AttributeError("Engine or connection are not initialized")
@@ -107,6 +101,26 @@ class MySQLEngine:
             return out
         else:
             self.__connection.execute(query)
+
+        
+    def drop_rows(self, query: str):
+        """
+        Drops rows from a table based on some conditions
+
+        :param query: the delete command to execute
+        """
+        if self.__engine is None:
+            raise AttributeError("Engine is not initialized")
+
+        if "DELETE" not in query:
+            raise ValueError("Not dropping anything")
+        if "WHERE" not in query:
+            raise ValueError("Unsafe dropping without WHERE not permitted")
+
+        self.__connection = self.__engine.connect()
+        self.__connection.execute(query)
+        self.__connection.close()
+        self.__connection = None
 
     
     def insert_df(self, data: pd.DataFrame, table_name: str):
