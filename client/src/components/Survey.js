@@ -217,7 +217,7 @@ export default function Survey(props) {
       <Formik
         initialValues={{
             Name: responseData ? responseData.student.student_name[0] : '',
-            Password: null,
+            Password: responseData ? responseData.student.pass_word["0"] : '',
             NetID: netid,
             CurrentSem: responseData ?  responseData.student.current_semester[0] : '', 
             StartingSem: responseData ? responseData.student.start_semester[0] : '',

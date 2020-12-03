@@ -24,10 +24,20 @@ def processSurveyData(data: dict):
     totalSem = convertSem(endS) - convertSem(startS) + 1
     student = (netID, name, password, startS, currS, endS, totalSem)
 
-    majors, minors = list(data["Majors"]), list(data["Minors"])
+    tracks_to_insert = list(data["Majors"]) + list(data["Minors"])
     tracks = []
-    for m in (majors + minors):
-        tracks.append([m, "", 0, netID])
+    if "interests" in data: # if interests is being submitted
+        interests = list(data["interests"])
+        for i, track in enumerate(tracks_to_insert):
+            if i >= len(interests):
+                tracks.append([track, "General", 0, netID])
+            else:
+                idx = [i for i, entry in enumerate(data['interests']) if track in entry['field_name']][0]
+                tracks.append([track, interests[idx]['interest'], int(interests[idx]['credit_hrs']), netID])
+
+    else: # create interests from scratch
+        for m in (tracks_to_insert):
+            tracks.append([m, "General", 0, netID])
 
     enrollments = []
     if "classes" in data:
@@ -55,7 +65,6 @@ def get_schedule_statistics(net_id: str, semester: str, schedule_id: int, engine
                             'AND schedules.schedule_id = {}'.format(net_id, semester, schedule_id)
 
     res_rows = engine.wrapped_query(match_rows_command)
-
     res_data = []
 
     AVG_RATING = 'Average Rating'
@@ -65,10 +74,10 @@ def get_schedule_statistics(net_id: str, semester: str, schedule_id: int, engine
     NUM_CLASSES = 'Number of Classes'
     NUM_INTEREST_CLASSES = 'Number of classes of interest'
     
-    for row in res_rows:
-        res_data.append(engine.stored_proc("schedule_statistics", row, 6))
+    for _, row in res_rows.iterrows():
+        res_data.append(engine.stored_proc("schedule_statistics", list(row), 6)[0])
 
-    res_df = pd.DataFrame(columns=[AVG_RATING, AVG_GPA, TOTAL_CREDITS, DESIRED_CREDITS, NUM_CLASSES, NUM_INTEREST_CLASSES], res_data)
+    res_df = pd.DataFrame(res_data, columns=[AVG_RATING, AVG_GPA, TOTAL_CREDITS, DESIRED_CREDITS, NUM_CLASSES, NUM_INTEREST_CLASSES])
 
     TOTAL_RATING = 'Total Rating'
     TOTAL_GPA = 'Total GPA'

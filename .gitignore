@@ -138,5 +138,8 @@ data/
 # RSA Key
 *.pem
 
-server_info
+# PyTorch Models
 saved_models/
+*.pth
+
+server_info

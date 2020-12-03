@@ -1,0 +1,31 @@
+.grid-container {
+    display: grid;
+    grid-template-columns: 49% 49%;
+    margin-left: 0px;
+    padding-left: 0px;
+    margin-right: 0px;
+    padding-right: 0px;
+    max-width: 2500px;
+    column-gap: 2%;
+}
+
+.grid-box {
+    padding: 1rem;
+    margin-right: 0px;
+    margin-left: 0px;
+    margin-top: 5px;
+    margin-bottom: 20px;
+    border-radius: 10px;
+    border: 1px solid #cecece;
+    background-color: white;
+    display: inline-block !important;
+    max-width: 50%;
+    margin: 10px;
+    height: 170px;
+}
+
+.item {
+    width:500px;
+    display: inline-block;
+}
+

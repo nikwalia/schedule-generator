@@ -1,6 +1,7 @@
 import pandas as pd
 import glob, os
 from sqlalchemy import create_engine
+from sqlalchemy.orm import create_session
 
 class MySQLEngine:
     def __init__(self, **kwargs):
@@ -14,14 +15,13 @@ class MySQLEngine:
         else:
             self.__url = 'mysql://' + kwargs['username'] + ':' + kwargs['password'] + '@' + kwargs['server']
         self.__engine = create_engine(self.__url)
-        self.__connection = self.__engine.connect()
+        self.__connection = None
 
 
     def __del__(self):
         """
         Destructor. Closes connection, then deletes members.
         """
-        self.__connection.close()
         del self.__connection
         del self.__engine
         del self.__url
@@ -33,17 +33,12 @@ class MySQLEngine:
         """
         if self.__engine is None:
             self.__engine = create_engine(self.__url)
-        if self.__connection is None:
-            self.__connection = self.__engine.connect()
 
 
     def close(self):
         """
         Manually closes a connection. Should be used only in debug when engine is not automatically deleted.
         """
-        if self.__connection is not None:
-            self.__connection.close()
-            self.__connection = None
         if self.__engine is not None:
             self.__engine = None
 
@@ -56,9 +51,13 @@ class MySQLEngine:
 
 
     def __get_header_types(self, table_name: str):
-        if self.__engine is None or self.__connection is None:
-            raise AttributeError("Engine or connection are not initialized")
-        return [row[1] for row in self.__connection.execute('SHOW COLUMNS FROM student_info.%s' % table_name)]
+        if self.__engine is None:
+            raise AttributeError("Engine is not initialized")
+        self.__connection = self.__engine.connect()
+        res = [row[1] for row in self.__connection.execute('SHOW COLUMNS FROM student_info.%s' % table_name)]
+        self.__connection.close()
+        self.__connection = None
+        return res
     
 
     def wrapped_query(self, query: str):
@@ -69,8 +68,9 @@ class MySQLEngine:
         
         :return: Pandas DataFrame containing query results
         """
-        if self.__engine is None or self.__connection is None:
-            raise AttributeError("Engine or connection are not initialized")
+        if self.__engine is None:
+            raise AttributeError("Engine is not initialized")
+        self.__connection = self.__engine.connect()
         if 'SELECT' not in query:
             raise ValueError('Retrieving data only')
         _res = self.__connection.execute(query)
@@ -78,6 +78,9 @@ class MySQLEngine:
         _dat = []
         for _row in _res:
             _dat.append(_row)
+        if self.__connection is not None: 
+            self.__connection.close()
+            self.__connection = None
         return pd.DataFrame(_dat, columns=_table_headers)
 
 
@@ -91,8 +94,9 @@ class MySQLEngine:
         
         :return: Pandas DataFrame if return_val == True
         """
-        if self.__engine is None or self.__connection is None:
-            raise AttributeError("Engine or connection are not initialized")
+        if self.__engine is None:
+            raise AttributeError("Engine is not initialized")
+        self.__connection = self.__engine.connect()
         if return_val:
             res = self.__connection.execute(query)
             out = []
@@ -101,7 +105,50 @@ class MySQLEngine:
             return out
         else:
             self.__connection.execute(query)
+        self.__connection.close()
+        self.__connection = None
 
+
+    def stored_proc(self, stored_proc: str, input_args: list, output_arg_length: int):
+        '''
+        Call a stored procedure. Note that this does not support INOUT arguments.
+
+        :param stored_proc: name of stored procedure
+        :param input_args: args to pass into stored procedure
+        :output_arg_length: number of arguments to return. can be 0.
+        :returns: results of the stored procedure
+        '''
+        if self.__engine is None:
+            raise AttributeError("Engine is not initialized")
+        self.__connection = self.__engine.connect()
+        
+        _query_tuple = []
+        for elem in input_args:
+            if isinstance(elem, str):
+                _query_tuple.append("'{}'")
+            else:
+                _query_tuple.append("{}")
+
+        _output_tuple = []
+        for i in range(output_arg_length):
+            _output_tuple.append('@res{}'.format(i))
+
+        _query_tuple.extend(_output_tuple)
+            
+        _command = "CALL {}({});".format(stored_proc, ', '.join(_query_tuple).format(*input_args))
+        self.__connection.execute(_command)
+
+        if output_arg_length > 0:
+            _output = []
+            _res_command = "SELECT " + ', '.join(_output_tuple) + ";"
+            _results = self.__connection.execute(_res_command)
+            for _res in _results:
+                _output.append(_res)
+        
+        self.__connection.close()
+        self.__connection = None
+        return _output
+        
         
     def drop_rows(self, query: str):
         """
@@ -132,9 +179,11 @@ class MySQLEngine:
         :param data: pandas DataFrame containing data to insert
         :param table_name: which table to insert to
         """
-        if self.__engine is None or self.__connection is None:
-            raise AttributeError("Engine or connection are not initialized")
+        if self.__engine is None:
+            raise AttributeError("Engine is not initialized")
         _table_headers = self.__get_header_types(table_name)
+        self.__connection = self.__engine.connect()
+        
         for df_header, table_header in zip(data.dtypes, _table_headers):
             if df_header in ('float64', 'float') and table_header != 'float':
                 raise TypeError('Incompatible data types: %s and %s' % (df_header, table_header))
@@ -159,6 +208,8 @@ class MySQLEngine:
             _values.append(insert_tuple % tuple(row))
         _command += ',\n'.join(_values)
         self.__connection.execute(_command)
+        self.__connection.close()
+        self.__connection = None
 
     
     def insert_tuple(self, data: tuple, table_name: str):
@@ -170,8 +221,9 @@ class MySQLEngine:
         :param data: tuple containing data to insert
         :param table_name: which table to insert to
         """
-        if self.__engine is None or self.__connection is None:
-            raise AttributeError("Engine or connection are not initialized")
+        if self.__engine is None:
+            raise AttributeError("Engine is not initialized")
+        self.__connection = self.__engine.connect()
         _table_headers = self.__get_header_types(table_name)
         tuple_types = tuple([type(val) for val in data])
         for tuple_dtype, table_header in zip(tuple_types, _table_headers):
@@ -197,6 +249,8 @@ class MySQLEngine:
 
         _command += (insert_tuple % data)
         self.__connection.execute(_command)
+        self.__connection.close()
+        self.__connection = None
 
 def loadEngine():
     """
