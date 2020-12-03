@@ -9,7 +9,7 @@ import torch.nn as nn
 from torch.optim import AdamW
 
 from db.mysql_engine import loadEngine
-from model.recommendation_model import LSTM, FFNN
+from model.recommendation_model import FFNN
 from model.utils import load_checkpoint, save_checkpoint, setup_model, TrackDataset
 
 def calculate_accuracy(predicted, expected):
@@ -123,6 +123,19 @@ def predict(model, args, test_loader, num_classes):
             outputs[step] = output
 
     return outputs
+
+
+def direct_predict(model, data):
+    """
+    Method to handle direct model prediction.
+
+    :param model: trained model
+    :param data: data to be passed into model
+    """
+    with torch.no_grad():
+        output = model(torch.tensor(data, dtype=torch.float32))
+    return output.numpy()
+
 
 def main(ap: argparse.ArgumentParser):
     """

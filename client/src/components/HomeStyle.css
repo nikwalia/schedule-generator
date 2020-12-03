@@ -1,0 +1,41 @@
+body,
+html,
+#root,
+.app,
+.container {
+    height: 100%;
+}
+
+#sidebar {
+	display: inline-block;
+	width: 30% !important;
+	float: right;
+	margin-bottom: 30px;
+}
+
+#scheduleBox {
+	display: inline-block;
+	width: 70% !important;
+}
+
+.schedule {
+	display: inline-block;
+	width: 23% !important;
+	margin-bottom: 30px;
+	border: 1px solid grey;
+	padding: 10px;
+	margin: 3px;
+}
+
+#preview {
+	width: 100%;
+	display: inline-block;
+	margin-bottom: 30px;
+	border: 1px solid grey;
+	padding: 10px;
+	margin: 3px;
+}
+
+h4 {
+	background: #DCDCDC;
+}

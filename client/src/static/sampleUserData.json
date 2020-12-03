@@ -1,0 +1,19 @@
+{
+    "NetID": "bangaru2", 
+    "coursework": [
+        {
+            "sem": "FA19", 
+            "courses" : [
+                {"id": "CS233", "avgGpa": 3.10, "rating": 1, "desc": "Fundamentals of computer architecture: digital logic design, working up from the logic gate level to understand the function of a simple computer; machine-level programming to understand implementation of high-level languages; performance models of modern computer architectures to enable performance optimization of software; hardware primitives for parallelism and security. Course Information: Prerequisite: CS 125 and CS 173; credit or concurrent enrollment in CS 225."},
+                {"id": "CS126", "avgGpa": 3.20, "rating": 5, "desc": "Fundamental principles and techniques of software development. Design, documentation, testing, and debugging software, with a significant emphasis on code review. Course Information: Credit is not given for both CS 242 and CS 126. Prerequisite: CS 125. For majors only."}
+            ] 
+        }, 
+        {
+            "sem": "SP20", 
+            "courses" : [
+                {"id": "CS233", "avgGpa": 3.10, "rating": 1, "desc": "Fundamentals of computer architecture: digital logic design, working up from the logic gate level to understand the function of a simple computer; machine-level programming to understand implementation of high-level languages; performance models of modern computer architectures to enable performance optimization of software; hardware primitives for parallelism and security. Course Information: Prerequisite: CS 125 and CS 173; credit or concurrent enrollment in CS 225."},
+                {"id": "CS126", "avgGpa": 3.20, "rating": 5, "desc": "Fundamental principles and techniques of software development. Design, documentation, testing, and debugging software, with a significant emphasis on code review. Course Information: Credit is not given for both CS 242 and CS 126. Prerequisite: CS 125. For majors only."}
+            ] 
+        }
+    ]
+}

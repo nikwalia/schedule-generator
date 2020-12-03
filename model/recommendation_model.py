@@ -12,6 +12,8 @@ class FFNN(nn.Module):
 
     def __init__(self, input_size, hidden_size):
         super(FFNN, self).__init__()
+        self.input_dim = input_size
+        self.hidden_dim = hidden_size
         self.fc1 = nn.Linear(input_size, hidden_size) 
         self.relu = nn.ReLU()
         self.fc2 = nn.Linear(hidden_size, input_size)  

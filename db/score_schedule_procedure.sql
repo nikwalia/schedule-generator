@@ -1,9 +1,9 @@
 CREATE DEFINER=`admin`@`%` PROCEDURE `score_classes`(
-	IN user_netid VARCHAR(10), -- EX- nikashw2
 	IN class_data JSON, -- has format '[{"course_id": "course 1", "score": score_of_neural_network}...]'
     IN credit_limit INT, -- 0 < credit_limit <= 18
-    IN user_interest VARCHAR(15), -- EX- Computer Science, BS-HPC, CS-MINOR
-    OUT best_schedule VARCHAR(200) -- has format course_1,course_2...
+    IN user_interest VARCHAR(15), -- EX- CS-ENG-HPC, CS-MINOR
+    OUT best_schedule VARCHAR(200), -- has format course_1,course_2...
+    OUT best_schedule_rating FLOAT
 )
 BEGIN
     -- temporary storage for cursor
@@ -42,7 +42,6 @@ BEGIN
 			c1.credits AS credits,
 			c1.gpa AS gpa,
 			c2.score AS score,
-			-- checks if a course matches an interest. Is either 0 or 1
 			1 - CAST(ISNULL(JSON_SEARCH(interest, 'one', user_interest)) AS UNSIGNED) AS match_interest,
 			IFNULL(r.avgRating, 5) AS avgRating
 	FROM student_info.courses c1
@@ -59,7 +58,6 @@ BEGIN
 	CREATE TEMPORARY TABLE results
 	WITH RECURSIVE comb (course_id, course_ids, sum_credits, num_classes, sum_gpa, sum_network_score, sum_match_interest, sum_avg_rating)
 	AS (
-			-- base case
 			SELECT
 				course_id,
 				course_id AS course_ids,
@@ -72,7 +70,6 @@ BEGIN
 			FROM interest_classes
 			WHERE credits <= credit_limit
 		UNION
-			-- recursive call
 			SELECT interest_classes.course_id AS course_id,
 				CONCAT(comb.course_ids, ',', interest_classes.course_id) AS course_ids,
 				interest_classes.credits + comb.sum_credits AS sum_credits,
@@ -114,15 +111,15 @@ BEGIN
 
     -- choose best schedule
     SELECT MAX(results.schedule_ranking)
-    INTO @max
+    INTO best_schedule_rating
     FROM results;
     
     SELECT course_ids
     INTO best_schedule
     FROM results
-    WHERE results.schedule_ranking = @max;
+    WHERE results.schedule_ranking = best_schedule_rating;
 
-	DROP TABLE class_data_table;
-	DROP TABLE interest_classes;
-	DROP TABLE results;
+	DROP TABLE class_data_table; -- probably won't need to do this
+	DROP TABLE interest_classes; -- HAVE TO DO THIS
+	DROP TABLE results; -- probably won't need to do this
 END

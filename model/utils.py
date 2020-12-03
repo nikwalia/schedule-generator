@@ -1,9 +1,13 @@
 import os
+import json
+import numpy as np
+
 import torch
 from torch.utils.data import Dataset
+
 from db.mysql_engine import MySQLEngine
-from recommendation_model import FFNN
-import numpy as np
+from model.recommendation_model import FFNN
+
 
 def load_checkpoint(filename: str, model = None):
     '''
@@ -15,13 +19,18 @@ def load_checkpoint(filename: str, model = None):
     '''
     print("Loading %s" % filename)
     checkpoint = torch.load(filename)
+
     if model:
         model.load_state_dict(checkpoint["state_dict"])
+    else:
+        with open(filename[:len(filename) - 4] + '.json') as config_file:
+            config = json.load(config_file)
+        model = FFNN(config['input_dim'], config['hidden_dim'])
 
     epoch = checkpoint["epoch"]
     loss = checkpoint["loss"]
     print("epoch = %d, loss = %f" % (checkpoint["epoch"], checkpoint["loss"]))
-    return epoch
+    return model
 
 def save_checkpoint(filename: str, model, epoch: int, loss: float, time):
     '''
@@ -45,6 +54,11 @@ def save_checkpoint(filename: str, model, epoch: int, loss: float, time):
         torch.save(checkpoint, filename)
         print("Saved %s" % filename)
 
+        config = {'input_dim': model.input_dim, 'hidden_dim': model.hidden_dim}
+        with open(filename[:len(filename) - 4] + '.json', 'w+') as config_file:
+            json.dump(config, config_file)
+
+
 
 def setup_model(engine: MySQLEngine, track: str, hidden_size: int = None):
     """
@@ -57,7 +71,6 @@ def setup_model(engine: MySQLEngine, track: str, hidden_size: int = None):
                 'SELECT course_id ' \
                 'FROM student_info.courses ' \
                 'WHERE interest LIKE "%%{}%%"'.format(track))
-    print(classes)
     vec_size = len(classes)
 
     if not hidden_size:
